@@ -1,17 +1,18 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Menu, X, User, LogOut } from 'lucide-react';
-import { Button } from '../common/Button';
-import { useAuth } from '../../hooks/useAuth';
-import { ROUTES } from '../../config/constants';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Menu, X, User, LogOut } from "lucide-react";
+import { Button } from "../common/Button";
+import { useAuth } from "../../hooks/useAuth";
+import { ROUTES } from "../../config/constants";
 
 interface HeaderProps {
-  variant?: 'public' | 'admin' | 'intern';
+  variant?: "public" | "admin" | "intern";
 }
 
-export const Header: React.FC<HeaderProps> = ({ variant = 'public' }) => {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [bg, setBg] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -20,30 +21,46 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'public' }) => {
     navigate(ROUTES.HOME);
   };
 
+  useEffect(() => {
+    const scroll = () => {
+      if (window.scrollY > 10) {
+        setBg(true);
+      }else{
+        setBg(false)
+      }
+    };
+
+    window.addEventListener("scroll", scroll);
+
+    return(()=>{
+      window.removeEventListener("scroll", scroll);
+    })
+  }, [bg]);
+
   const getNavItems = () => {
     switch (variant) {
-      case 'admin':
+      case "admin":
         return [
-          { label: 'Dashboard', href: ROUTES.ADMIN_DASHBOARD },
-          { label: 'Cohorts', href: ROUTES.ADMIN_COHORTS },
-          { label: 'Candidates', href: ROUTES.ADMIN_CANDIDATES },
-          { label: 'Tests', href: ROUTES.ADMIN_TESTS },
-          { label: 'Projects', href: ROUTES.ADMIN_PROJECTS },
-          { label: 'Wallets', href: ROUTES.ADMIN_WALLETS },
-          { label: 'Reports', href: ROUTES.ADMIN_REPORTS },
+          { label: "Dashboard", href: ROUTES.ADMIN_DASHBOARD },
+          { label: "Cohorts", href: ROUTES.ADMIN_COHORTS },
+          { label: "Candidates", href: ROUTES.ADMIN_CANDIDATES },
+          { label: "Tests", href: ROUTES.ADMIN_TESTS },
+          { label: "Projects", href: ROUTES.ADMIN_PROJECTS },
+          { label: "Wallets", href: ROUTES.ADMIN_WALLETS },
+          { label: "Reports", href: ROUTES.ADMIN_REPORTS },
         ];
-      case 'intern':
+      case "intern":
         return [
-          { label: 'Dashboard', href: ROUTES.INTERN_DASHBOARD },
-          { label: 'Learning', href: ROUTES.INTERN_LEARNING },
-          { label: 'Projects', href: ROUTES.INTERN_PROJECTS },
-          { label: 'Wallet', href: ROUTES.INTERN_WALLET },
+          { label: "Dashboard", href: ROUTES.INTERN_DASHBOARD },
+          { label: "Learning", href: ROUTES.INTERN_LEARNING },
+          { label: "Projects", href: ROUTES.INTERN_PROJECTS },
+          { label: "Wallet", href: ROUTES.INTERN_WALLET },
         ];
       default:
         return [
-          { label: 'Home', href: ROUTES.HOME },
-          { label: 'About', href: ROUTES.ABOUT },
-          { label: 'Jobs', href: ROUTES.JOBS },
+          { label: "Home", href: ROUTES.HOME },
+          { label: "About", href: ROUTES.ABOUT },
+          { label: "Jobs", href: ROUTES.JOBS },
         ];
     }
   };
@@ -51,28 +68,38 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'public' }) => {
   const navItems = getNavItems();
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+    <header className={`w-full ${bg ? "bg-white top-0" : "bg-transparent top-2"} shadow-sm fixed left-0 py-4 z-50`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to={variant === 'admin' ? ROUTES.ADMIN_DASHBOARD : ROUTES.HOME} className="flex items-center space-x-2">
+          <Link
+            to={variant === "admin" ? ROUTES.ADMIN_DASHBOARD : ROUTES.HOME}
+            className="flex items-center space-x-2"
+          >
             <div className="w-10 h-10 bg-gradient-to-br from-[#0f266c] to-[#007bff] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-xl">IP</span>
             </div>
-            <span className="text-xl font-bold text-gray-900">Internship Platform</span>
+            <span className="text-xl font-bold text-[#007bff]">
+              Internship Platform
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                to={item.href}
-                className="text-gray-700 hover:text-[#007bff] transition-colors duration-200 font-medium"
-              >
-                {item.label}
-              </Link>
-            ))}
+          <nav className={`hidden md:block ${bg ? "bg-transparent" : "bg-white/20"} backdrop-blur-md px-6 py-4 rounded-3xl`}>
+            <ul className="flex items-center space-x-8">
+              {navItems.map((item) => (
+                <li className="group relative">
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className={`${bg ? "text-gray-800" : "text-white"} hover:text-[#007bff] transition-colors duration-200 font-medium`}
+                  >
+                    {item.label}
+                  </Link>
+                  <span className="absolute w-0 h-1 left-0 -bottom-3 rounded-md bg-[#007bff] group-hover:w-full duration-300 ease-in-out transform -rotate-6"></span>
+                </li>
+              ))}
+            </ul>
           </nav>
 
           {/* Auth Section */}
@@ -93,10 +120,12 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'public' }) => {
                   <span>Logout</span>
                 </Button>
               </div>
-            ) : variant === 'public' ? (
+            ) : variant === "public" ? (
               <div className="flex items-center space-x-3">
                 <Link to={ROUTES.LOGIN}>
-                  <Button variant="outline" size="sm">Login</Button>
+                  <Button variant="outline" size="sm">
+                    Login
+                  </Button>
                 </Link>
                 <Link to={ROUTES.APPLY}>
                   <Button size="sm">Apply Now</Button>
@@ -108,9 +137,13 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'public' }) => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+            className="md:hidden p-2 rounded-lg bg-gray-100 transition-colors duration-200"
           >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
 
@@ -118,7 +151,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'public' }) => {
         {isMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden border-t border-gray-200 py-4"
           >
@@ -127,7 +160,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'public' }) => {
                 <Link
                   key={item.href}
                   to={item.href}
-                  className="text-gray-700 hover:text-[#007bff] transition-colors duration-200 font-medium"
+                  className="text-white hover:text-[#007bff] transition-colors duration-200 font-medium"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.label}
@@ -137,7 +170,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'public' }) => {
                 <div className="pt-3 border-t border-gray-200">
                   <div className="flex items-center space-x-2 mb-3">
                     <User className="w-5 h-5 text-gray-500" />
-                    <span className="text-gray-700">{user?.name}</span>
+                    <span className="text-white">{user?.name}</span>
                   </div>
                   <Button
                     variant="outline"
@@ -149,13 +182,17 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'public' }) => {
                     Logout
                   </Button>
                 </div>
-              ) : variant === 'public' ? (
+              ) : variant === "public" ? (
                 <div className="pt-3 border-t border-gray-200 space-y-2">
                   <Link to={ROUTES.LOGIN} className="block">
-                    <Button variant="outline" size="sm" className="w-full">Login</Button>
+                    <Button variant="outline" size="sm" className="w-full">
+                      Login
+                    </Button>
                   </Link>
                   <Link to={ROUTES.APPLY} className="block">
-                    <Button size="sm" className="w-full">Apply Now</Button>
+                    <Button size="sm" className="w-full">
+                      Apply Now
+                    </Button>
                   </Link>
                 </div>
               ) : null}

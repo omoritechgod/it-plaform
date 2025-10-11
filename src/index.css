@@ -1,3 +1,82 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .animate-clip {
+    animation: animate 3s ease-in-out infinite;
+  }
+  .animate-slide {
+    animation: scroll-left 25s linear infinite;
+    animation-play-state: running;
+    &:hover {
+      animation-play-state: paused;
+    }
+  }
+
+  @keyframes scroll-left {
+    0% {
+      transform: translateX(0);
+    }
+    10% {
+      transform: translateX(0);
+    }
+    20% {
+      transform: translateX(-154px); /* ~1 slide */
+    }
+    30% {
+      transform: translateX(-308px); /* ~2 slides */
+    }
+    40% {
+      transform: translateX(-462px); /* ~3 slides */
+    }
+    50% {
+      transform: translateX(-616px); /* max shift */
+    }
+    60% {
+      transform: translateX(-616px);
+    }
+    70% {
+      transform: translateX(-462px);
+    }
+    80% {
+      transform: translateX(-308px);
+    }
+    90% {
+      transform: translateX(-154px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes animate {
+    0%,
+    100% {
+      clip-path: polygon(
+        0 40%,
+        16% 39%,
+        28% 43%,
+        40% 53%,
+        60% 54%,
+        80% 51%,
+        100% 45%,
+        100% 100%,
+        0 100%
+      );
+    }
+    50% {
+      clip-path: polygon(
+        0 50%,
+        16% 55%,
+        34% 52%,
+        50% 47%,
+        63% 35%,
+        80% 30%,
+        100% 33%,
+        100% 100%,
+        0 100%
+      );
+    }
+  }
+}
