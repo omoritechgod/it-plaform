@@ -1,6 +1,36 @@
+@import url("https://fonts.googleapis.com/css2?family=Marko+One&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-soothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Marko One", cursive;
+  }
+
+  body {
+    @apply bg-white text-gray-900;
+    font-family: "Roboto", sans-serif;
+  }
+}
 
 @layer utilities {
   .animate-clip {
@@ -79,4 +109,30 @@
       );
     }
   }
+}
+
+/* css for title */
+.title {
+  font-size: 1.5rem;
+  color: transparent;
+  background: linear-gradient(123deg, white, blue);
+  background-clip: text;
+  -webkit-text-stroke: 1px #0077c0;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 200%;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  animation: gradientMove 4s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+/*  raduis*/
+.radius {
+  border-radius: 87% 13% 75% 25% / 27% 71% 29% 73% ;
 }

@@ -85,18 +85,18 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className={`hidden md:block ${bg ? "bg-transparent" : "bg-white/20"} backdrop-blur-md px-6 py-4 rounded-3xl`}>
+          <nav className={`hidden md:block ${bg ? "bg-transparent" : "bg-white/10"} backdrop-blur-md px-6 py-2 rounded-3xl`}>
             <ul className="flex items-center space-x-8">
               {navItems.map((item) => (
                 <li className="group relative">
                   <Link
                     key={item.href}
                     to={item.href}
-                    className={`${bg ? "text-gray-800" : "text-white"} hover:text-[#007bff] transition-colors duration-200 font-medium`}
+                    className={`${bg ? "text-gray-800" : "text-white"} text-[18px] hover:text-blue transition-colors duration-200 font-medium`}
                   >
                     {item.label}
                   </Link>
-                  <span className="absolute w-0 h-1 left-0 -bottom-3 rounded-md bg-[#007bff] group-hover:w-full duration-300 ease-in-out transform -rotate-6"></span>
+                  <span className="absolute w-0 h-1 left-0 -bottom-1 rounded-md bg-blue group-hover:w-full duration-300 ease-in-out transform -rotate-6"></span>
                 </li>
               ))}
             </ul>
