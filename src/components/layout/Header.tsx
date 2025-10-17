@@ -92,7 +92,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
                   <Link
                     key={item.href}
                     to={item.href}
-                    className={`${bg ? "text-gray-800" : "text-white"} text-[18px] hover:text-blue transition-colors duration-200 font-medium`}
+                    className={`${bg ? "text-gray-800" : "text-white"} text-[16px] hover:text-blue transition-colors duration-200 font-medium`}
                   >
                     {item.label}
                   </Link>

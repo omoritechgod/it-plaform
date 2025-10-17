@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Marko+One&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -10,6 +10,7 @@
     text-rendering: optimizeLegibility;
     -webkit-font-soothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-optical-sizing: auto;
   }
   * {
     margin: 0;
@@ -23,11 +24,13 @@
   h4,
   h5,
   h6 {
-    font-family: "Marko One", cursive;
+    @apply font-bold;
+
+    font-family: "Montserrat", sans-serif;
   }
 
   body {
-    @apply bg-white text-gray-900;
+    @apply bg-white text-gray-600;
     font-family: "Roboto", sans-serif;
   }
 }
@@ -36,8 +39,15 @@
   .animate-clip {
     animation: animate 3s ease-in-out infinite;
   }
+  .alternate-animation {
+    animation: scroll-right 43s linear infinite;
+    animation-play-state: running;
+    &:hover {
+      animation-play-state: paused;
+    }
+  }
   .animate-slide {
-    animation: scroll-left 25s linear infinite;
+    animation: scroll-left 45s linear infinite;
     animation-play-state: running;
     &:hover {
       animation-play-state: paused;
@@ -48,35 +58,18 @@
     0% {
       transform: translateX(0);
     }
-    10% {
-      transform: translateX(0);
-    }
-    20% {
-      transform: translateX(-154px); /* ~1 slide */
-    }
-    30% {
-      transform: translateX(-308px); /* ~2 slides */
-    }
-    40% {
-      transform: translateX(-462px); /* ~3 slides */
-    }
+
     50% {
-      transform: translateX(-616px); /* max shift */
+      transform: translateX(-50%);
     }
-    60% {
-      transform: translateX(-616px);
-    }
-    70% {
-      transform: translateX(-462px);
-    }
-    80% {
-      transform: translateX(-308px);
-    }
-    90% {
-      transform: translateX(-154px);
-    }
-    100% {
+  }
+  @keyframes scroll-right {
+    0% {
       transform: translateX(0);
+    }
+
+    50% {
+      transform: translateX(50%);
     }
   }
 
@@ -134,5 +127,8 @@
 }
 /*  raduis*/
 .radius {
-  border-radius: 87% 13% 75% 25% / 27% 71% 29% 73% ;
+  border-radius: 87% 13% 75% 25% / 27% 71% 29% 73%;
+}
+.hero-raduis {
+  border-radius: 100% 0% 100% 0% / 0% 66% 34% 100%;
 }

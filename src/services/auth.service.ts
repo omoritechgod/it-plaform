@@ -34,7 +34,7 @@ class AuthService {
   }
 
   async signup(data: SignupData): Promise<ApiResponse<{ user: User; token: string }>> {
-    const response = await api.post('/auth/signup', data);
+    const response = await api.post('/register', data);
     if (response.success && response.data.token) {
       localStorage.setItem('auth_token', response.data.token);
     }

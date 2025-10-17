@@ -9,6 +9,8 @@ import { Input } from '../../components/common/Input';
 import { Card } from '../../components/common/Card';
 import { VideoRecorder } from '../../components/forms/VideoRecorder';
 import internService from '../../services/intern.service';
+import SubHero from '../../components/common/SubHero';
+import { ROUTES } from '../../config/constants';
 
 const applicationSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -129,10 +131,11 @@ export const Apply: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f266c] via-[#007bff] to-[#0056b3] py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Progress Steps */}
-        <div className="mb-8">
+    <div className="min-h-screen">
+      <SubHero CTA='About' route={ROUTES.APPLY}/>
+      <div className="max-w-4xl mt-32 mx-auto">
+       {/* Progress Steps */}
+        <div className="mb-8 bg-gradient-to-br from-[#0f266c] via-[#007bff] to-[#0056b3]">
           <div className="flex items-center justify-center space-x-4 mb-8">
             {steps.map((step, index) => (
               <div key={step.number} className="flex items-center">
