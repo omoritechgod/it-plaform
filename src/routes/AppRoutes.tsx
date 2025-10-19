@@ -16,6 +16,7 @@ import { Wallet } from '../pages/intern/Wallet';
 import { useAuth } from '../hooks/useAuth';
 import { ROUTES, USER_ROLES } from '../config/constants';
 import About from '../pages/About';
+import Jobs from '../pages/public/Jobs';
 
 const ProtectedRoute: React.FC<{ 
   children: React.ReactNode; 
@@ -50,7 +51,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="/" element={<PublicLayout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
-          <Route path="jobs" element={<div>Jobs Page Coming Soon</div>} />
+          <Route path="jobs" element={<Jobs />} />
           <Route path="apply" element={<Apply />} />
         </Route>
 

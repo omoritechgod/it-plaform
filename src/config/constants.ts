@@ -12,11 +12,10 @@ export const ROUTES = {
   HOME: '/',
   ABOUT: '/about',
   JOBS: '/jobs',
-  APPLY: '/apply',
   
   // Auth routes
   LOGIN: '/login',
-  SIGNUP: '/signup',
+  APPLY: '/apply',
   
   // Admin routes
   ADMIN_ROOT: '/admin',

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 interface ApplyStore {
   name: string;
@@ -8,37 +9,52 @@ interface ApplyStore {
   skills: string[];
   agreement_accepted: boolean;
 }
+
 interface ApplyActions {
-  setName: (name: string) => void;
-  setEmail: (email: string) => void;
-  setPassword: (password: string) => void;
-  setConfirmPassword: (confirmPassword: string) => void;
-  setSkills: (skills: string[]) => void;
-  setAgreementAccepted: (accepted: boolean) => void;
+  updateManyFields: (fields: Partial<ApplyStore>) => void;
+  updateField: <K extends keyof ApplyStore>(
+    key: K,
+    value: ApplyStore[K]
+  ) => void;
   reset: () => void;
 }
 
-export const useApplyStore = create<ApplyStore & ApplyActions>((set) => ({
-  name: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-  skills: [],
-  agreement_accepted: false,
+export const useApplyStore = create<ApplyStore & ApplyActions>()(
+  persist(
+    (set) => ({
+      // Default state
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      skills: [],
+      agreement_accepted: false,
 
-  setName: (name) => set({ name }),
-  setEmail: (email) => set({ email }),
-  setPassword: (password) => set({ password }),
-  setConfirmPassword: (confirmPassword) => set({ confirmPassword }),
-  setSkills: (skills) => set({ skills }),
-  setAgreementAccepted: (accepted) => set({ agreement_accepted: accepted }),
+      // Generic updater
+      updateField: (key, value) => set({ [key]: value } as Partial<ApplyStore>),
 
-  reset: () => set({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    skills: [],
-    agreement_accepted: false,
-  }),
-}));
+      // update many fields
+      updateManyFields: (fields) => set(fields),
+
+      // Reset to default
+      reset: () =>
+        set({
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          skills: [],
+          agreement_accepted: false,
+        }),
+    }),
+    {
+      name: "apply-storage",
+      partialize: (state) => ({
+        name: state.name,
+        email: state.email,
+        skills: state.skills,
+        agreement_accepted: state.agreement_accepted,
+      }),
+    }
+  )
+);

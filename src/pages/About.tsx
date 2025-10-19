@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import SubHero from "../components/common/SubHero";
-import { ROUTES } from "../config/constants";
 import { motion } from "framer-motion";
 import { Eye, Target } from "lucide-react";
 import Title from "../components/ui/Title";
@@ -77,9 +76,9 @@ const About = () => {
               lead, and make an impact"
       />
 
-      <section className="max-w-5xl relative py-20 mx-auto">
-        <motion.div className="flex flex-col md:flex-row justify-between items-start">
-          <div className="md:max-w-[500px] text-gray-700 text-lg">
+      <section className="max-w-5xl relative py-20  px-4 md:px-0  mx-auto">
+        <motion.div className="flex flex-col md:flex-row gap-10 md:gap-0 justify-between items-start">
+          <div className="md:max-w-[500px] md:sticky overflow-y-auto top-28 text-gray-700 text-lg">
             <h1 className="text-dark_blue text-xl mb-2">Who We Are</h1>
             <p>
               We’re building Africa’s most trusted ecosystem for experiential
@@ -89,20 +88,37 @@ const About = () => {
               experience that bridges the gap between education and career.
             </p>
           </div>
-          <p className="md:max-w-[500px] text-gray-700 text-lg mt-8">
-            We’re building Africa’s most trusted ecosystem for experiential
-            learning — connecting passionate interns to real projects, guided
-            mentorship, and growth opportunities in tech. Our mission is to
-            empower the next generation of innovators by providing hands-on
-            experience that bridges the gap between education and career.
-          </p>
+          <div className="md:max-w-[500px] text-gray-700 text-lg flex flex-col gap-10 md:gap-6">
+            <div>
+              <h1 className="text-dark_blue text-xl mb-2">Mission</h1>
+              <p>
+                We’re building Africa’s most trusted ecosystem for experiential
+                learning — connecting passionate interns to real projects,
+                guided mentorship, and growth opportunities in tech. Our mission
+                is to empower the next generation of innovators by providing
+                hands-on experience that bridges the gap between education and
+                career.
+              </p>
+            </div>
+            <div>
+              <h1 className="text-dark_blue text-xl mb-2">Vision</h1>
+              <p>
+                We’re building Africa’s most trusted ecosystem for experiential
+                learning — connecting passionate interns to real projects,
+                guided mentorship, and growth opportunities in tech. Our mission
+                is to empower the next generation of innovators by providing
+                hands-on experience that bridges the gap between education and
+                career.
+              </p>
+            </div>
+          </div>
         </motion.div>
-        <span className="w-40 h-1 rounded-md bg-blue absolute left-0 bottom-9"></span>
+        <span className="w-40 h-1 rounded-md bg-blue absolute left-4 md:left-0 bottom-9"></span>
       </section>
 
       <section
         ref={ref}
-        className="max-w-5xl mx-auto py-10 flex justify-between gap-6"
+        className="max-w-5xl mx-auto py-10 px-4 md:px-0 grid md:grid-cols-3 gap-6"
       >
         {stats.map((item, index) => (
           <motion.div
@@ -123,7 +139,7 @@ const About = () => {
         ))}
       </section>
 
-      <section className="md:max-w-5xl mx-auto py-10 pb-16 bg-[#FAFAFA]">
+      <section className="md:max-w-5xl mx-auto px-4 md:px-0 py-10 pb-16 bg-[#FAFAFA]">
         <Title
           title="Our Structure"
           description="The Internship Platform is powered by three interconnected arms

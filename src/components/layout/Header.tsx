@@ -25,16 +25,16 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
     const scroll = () => {
       if (window.scrollY > 10) {
         setBg(true);
-      }else{
-        setBg(false)
+      } else {
+        setBg(false);
       }
     };
 
     window.addEventListener("scroll", scroll);
 
-    return(()=>{
+    return () => {
       window.removeEventListener("scroll", scroll);
-    })
+    };
   }, [bg]);
 
   const getNavItems = () => {
@@ -68,7 +68,11 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
   const navItems = getNavItems();
 
   return (
-    <header className={`w-full ${bg ? "bg-white top-0" : "bg-transparent top-2"} shadow-sm fixed left-0 py-4 z-50`}>
+    <header
+      className={`w-full ${
+        bg ? "bg-white top-0" : "bg-transparent top-2"
+      } shadow-sm fixed left-0 py-4 z-50`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -85,14 +89,20 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className={`hidden md:block ${bg ? "bg-transparent" : "bg-white/10"} backdrop-blur-md px-6 py-2 rounded-3xl`}>
+          <nav
+            className={`hidden md:block ${
+              bg ? "bg-transparent" : "bg-white/10"
+            } backdrop-blur-md px-6 py-2 rounded-3xl`}
+          >
             <ul className="flex items-center space-x-8">
-              {navItems.map((item) => (
-                <li className="group relative">
+              {navItems.map((item, index) => (
+                <li key={index} className="group relative">
                   <Link
                     key={item.href}
                     to={item.href}
-                    className={`${bg ? "text-gray-800" : "text-white"} text-[16px] hover:text-blue transition-colors duration-200 font-medium`}
+                    className={`${
+                      bg ? "text-gray-800" : "text-white"
+                    } text-[16px] hover:text-blue transition-colors duration-200 font-medium`}
                   >
                     {item.label}
                   </Link>
