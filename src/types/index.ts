@@ -2,7 +2,7 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  role: 'super_admin' | 'admin' | 'intern';
+  role: "super_admin" | "admin" | "intern";
   avatar?: string;
   created_at: string;
   updated_at: string;
@@ -39,7 +39,7 @@ export interface SkillTest {
   id: string;
   title: string;
   skill: string;
-  level: 'beginner' | 'intermediate' | 'advanced';
+  level: "beginner" | "intermediate" | "advanced";
   questions: Question[];
   time_limit: number; // minutes
   max_attempts: number;
@@ -49,7 +49,7 @@ export interface SkillTest {
 export interface Question {
   id: string;
   question: string;
-  type: 'multiple_choice' | 'text' | 'image';
+  type: "multiple_choice" | "text" | "image";
   options?: string[];
   correct_answer: string;
   image_url?: string;
@@ -65,7 +65,7 @@ export interface Project {
   max_interns: number;
   current_applicants: number;
   deadline: string;
-  status: 'active' | 'closed' | 'completed';
+  status: "active" | "closed" | "completed";
   stipend_amount?: number;
 }
 
@@ -87,11 +87,11 @@ export interface BankAccount {
 
 export interface Transaction {
   id: string;
-  type: 'credit' | 'debit';
+  type: "credit" | "debit";
   amount: number;
   description: string;
   reference: string;
-  status: 'pending' | 'completed' | 'failed';
+  status: "pending" | "completed" | "failed";
   created_at: string;
 }
 
@@ -100,14 +100,15 @@ export interface WithdrawalRequest {
   user_id: string;
   amount: number;
   bank_account: BankAccount;
-  status: 'pending' | 'approved' | 'rejected' | 'completed';
+  status: "pending" | "approved" | "rejected" | "completed";
   admin_notes?: string;
   created_at: string;
 }
 
 export interface ApiResponse<T = any> {
-  success: boolean;
   message: string;
-  data?: T;
+  status: boolean;
+  token: string;
+  data: T;
   errors?: Record<string, string[]>;
 }

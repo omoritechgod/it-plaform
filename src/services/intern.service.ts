@@ -5,6 +5,7 @@ export interface ApplicationData {
   name: string;
   email: string;
   password: string;
+  confirmPassword: string;
   skills: string[];
   agreement_accepted: boolean;
   affirmation_video?: File;
@@ -34,7 +35,7 @@ class InternService {
       }
     });
     
-    return api.post('/intern/apply', formData, {
+    return api.post('/api/register', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
   }

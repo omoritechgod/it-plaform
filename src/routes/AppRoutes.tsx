@@ -15,12 +15,13 @@ import { LearningHub } from '../pages/intern/LearningHub';
 import { Wallet } from '../pages/intern/Wallet';
 import { useAuth } from '../hooks/useAuth';
 import { ROUTES, USER_ROLES } from '../config/constants';
+import About from '../pages/About';
+import Jobs from '../pages/public/Jobs';
 
 const ProtectedRoute: React.FC<{ 
   children: React.ReactNode; 
-  requiredRole?: string;
-}> = ({ children, requiredRole }) => {
-  const { user, isAuthenticated, isLoading } = useAuth();
+}> = ({ children}) => {
+  const {  isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -34,9 +35,9 @@ const ProtectedRoute: React.FC<{
     return <Navigate to={ROUTES.LOGIN} replace />;
   }
 
-  if (requiredRole && user?.role !== requiredRole) {
-    return <Navigate to={ROUTES.HOME} replace />;
-  }
+  // if (requiredRole && user?.role !== requiredRole) {
+  //   return <Navigate to={ROUTES.HOME} replace />;
+  // }
 
   return <>{children}</>;
 };
@@ -48,20 +49,19 @@ export const AppRoutes: React.FC = () => {
         {/* Public Routes */}
         <Route path="/" element={<PublicLayout />}>
           <Route index element={<Home />} />
-          <Route path="about" element={<div>About Page Coming Soon</div>} />
-          <Route path="jobs" element={<div>Jobs Page Coming Soon</div>} />
+          <Route path="about" element={<About />} />
+          <Route path="jobs" element={<Jobs />} />
           <Route path="apply" element={<Apply />} />
         </Route>
 
         {/* Auth Routes */}
         <Route path={ROUTES.LOGIN} element={<Login />} />
-        <Route path={ROUTES.SIGNUP} element={<div>Signup Page Coming Soon</div>} />
 
         {/* Admin Routes */}
         <Route
           path="/admin"
           element={
-            <ProtectedRoute requiredRole={USER_ROLES.SUPER_ADMIN}>
+            <ProtectedRoute>
               <AdminLayout />
             </ProtectedRoute>
           }
@@ -81,7 +81,7 @@ export const AppRoutes: React.FC = () => {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute requiredRole={USER_ROLES.ADMIN}>
+            <ProtectedRoute>
               <AdminLayout />
             </ProtectedRoute>
           }
@@ -101,7 +101,7 @@ export const AppRoutes: React.FC = () => {
         <Route
           path="/intern"
           element={
-            <ProtectedRoute requiredRole={USER_ROLES.INTERN}>
+            <ProtectedRoute>
               <InternLayout />
             </ProtectedRoute>
           }

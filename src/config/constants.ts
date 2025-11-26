@@ -1,7 +1,7 @@
 // Application constants
 export const APP_CONFIG = {
   APP_NAME: 'Internship Platform',
-  API_BASE_URL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api',
+  API_BASE_URL: import.meta.env.VITE_API_BASE_URL || 'https://mdoilandgas.com/it_bck/it_bck/public/',
   PAYSTACK_PUBLIC_KEY: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || '',
   UPLOAD_MAX_SIZE: 10 * 1024 * 1024, // 10MB
   VIDEO_MAX_SIZE: 50 * 1024 * 1024, // 50MB
@@ -12,11 +12,10 @@ export const ROUTES = {
   HOME: '/',
   ABOUT: '/about',
   JOBS: '/jobs',
-  APPLY: '/apply',
   
   // Auth routes
   LOGIN: '/login',
-  SIGNUP: '/signup',
+  APPLY: '/apply',
   
   // Admin routes
   ADMIN_ROOT: '/admin',
