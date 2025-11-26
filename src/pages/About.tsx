@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import SubHero from "../components/common/SubHero";
 import { motion } from "framer-motion";
-import { Eye, Target } from "lucide-react";
-import Title from "../components/ui/Title";
 import CTA from "../components/common/CTA";
 import { Building2, Lightbulb, GraduationCap } from "lucide-react";
 
