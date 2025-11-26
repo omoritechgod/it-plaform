@@ -1,3 +1,4 @@
+import { number } from "zod";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -5,6 +6,7 @@ interface ApplyStore {
   name: string;
   email: string;
   password: string;
+  phone: string;
   confirmPassword: string;
   skills: string[];
   agreement_accepted: boolean;
@@ -26,6 +28,7 @@ export const useApplyStore = create<ApplyStore & ApplyActions>()(
       name: "",
       email: "",
       password: "",
+      phone: "",
       confirmPassword: "",
       skills: [],
       agreement_accepted: false,
@@ -42,6 +45,7 @@ export const useApplyStore = create<ApplyStore & ApplyActions>()(
           name: "",
           email: "",
           password: "",
+          phone: "",
           confirmPassword: "",
           skills: [],
           agreement_accepted: false,
@@ -52,6 +56,7 @@ export const useApplyStore = create<ApplyStore & ApplyActions>()(
       partialize: (state) => ({
         name: state.name,
         email: state.email,
+        phone: state.phone,
         skills: state.skills,
         agreement_accepted: state.agreement_accepted,
       }),

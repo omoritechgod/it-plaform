@@ -12,7 +12,7 @@ export const useAuth = () => {
         setLoading(true);
         try {
           const response = await authService.getCurrentUser();
-          if (response.success && response.data) {
+          if (response.status === true && response.data) {
             setUser(response.data);
           } else {
             localStorage.removeItem('auth_token');

@@ -35,7 +35,7 @@ class InternService {
       }
     });
     
-    return api.post('register', formData, {
+    return api.post('/api/register', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
   }

@@ -11,6 +11,7 @@ const applicationSchema = z
   .object({
     name: z.string().min(2, "Name must be at least 2 characters"),
     email: z.string().email("Please enter a valid email address"),
+    phone: z.string().nonempty("number is required"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string(),
   })
@@ -26,7 +27,7 @@ type Props = {
 };
 
 const PersonalInfo: React.FC<Props> = ({ next }) => {
-  const { name, email, password, confirmPassword, updateManyFields } =
+  const { name, email, password, phone, confirmPassword, updateManyFields } =
     useApplyStore((state) => state);
 
   const {
@@ -37,8 +38,9 @@ const PersonalInfo: React.FC<Props> = ({ next }) => {
     defaultValues: {
       name: name,
       email: email,
-      password: password ,
-      confirmPassword: confirmPassword
+      phone: phone,
+      password: password,
+      confirmPassword: confirmPassword,
     },
     resolver: zodResolver(applicationSchema),
   });
@@ -48,7 +50,7 @@ const PersonalInfo: React.FC<Props> = ({ next }) => {
     e?: React.BaseSyntheticEvent
   ) => {
     e?.preventDefault();
-    console.log(data)
+    console.log(data);
     updateManyFields(data);
     next();
   };
@@ -86,6 +88,14 @@ const PersonalInfo: React.FC<Props> = ({ next }) => {
             {...register("password")}
             error={errors.password?.message}
             placeholder="Create a strong password"
+          />
+
+          <Input
+            label="Phone Number"
+            type="text"
+            {...register("phone")}
+            error={errors.phone?.message}
+            placeholder="2341527762"
           />
 
           <Input

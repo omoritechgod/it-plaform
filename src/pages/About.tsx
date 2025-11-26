@@ -77,10 +77,10 @@ const About = () => {
       />
 
       <section className="max-w-5xl relative py-20  px-4 md:px-0  mx-auto">
-        <motion.div className="flex flex-col md:flex-row gap-10 md:gap-0 justify-between items-start">
-          <div className="md:max-w-[500px] md:sticky overflow-y-auto top-28 text-gray-700 text-lg">
-            <h1 className="text-dark_blue text-xl mb-2">Who We Are</h1>
-            <p>
+        <motion.div className="flex flex-col gap-20 justify-center px-4 py-8 bg-white shadow-md border rounded-md items-center">
+          <div className="w-full flex justify-between items-start  text-gray-700 text-lg">
+            <h1 className="max-w-xl w-11/12 text-dark_blue text-xl mb-2">Who We Are</h1>
+            <p className="max-w-xl w-11/12">
               We’re building Africa’s most trusted ecosystem for experiential
               learning — connecting passionate interns to real projects, guided
               mentorship, and growth opportunities in tech. Our mission is to
@@ -88,10 +88,10 @@ const About = () => {
               experience that bridges the gap between education and career.
             </p>
           </div>
-          <div className="md:max-w-[500px] text-gray-700 text-lg flex flex-col gap-10 md:gap-6">
-            <div>
-              <h1 className="text-dark_blue text-xl mb-2">Mission</h1>
-              <p>
+          <div className="w-full text-gray-700 text-lg flex flex-col gap-20">
+            <div className="flex justify-between items-start">
+              <h1 className="max-w-xl w-11/12 text-dark_blue text-xl mb-2">Mission</h1>
+              <p className="max-w-xl w-11/12">
                 We’re building Africa’s most trusted ecosystem for experiential
                 learning — connecting passionate interns to real projects,
                 guided mentorship, and growth opportunities in tech. Our mission
@@ -100,9 +100,9 @@ const About = () => {
                 career.
               </p>
             </div>
-            <div>
-              <h1 className="text-dark_blue text-xl mb-2">Vision</h1>
-              <p>
+            <div className="flex justify-between items-start">
+              <h1 className="max-w-xl w-11/12 text-dark_blue text-xl mb-2">Vision</h1>
+              <p className="max-w-xl w-11/12">
                 We’re building Africa’s most trusted ecosystem for experiential
                 learning — connecting passionate interns to real projects,
                 guided mentorship, and growth opportunities in tech. Our mission
@@ -113,7 +113,6 @@ const About = () => {
             </div>
           </div>
         </motion.div>
-        <span className="w-40 h-1 rounded-md bg-blue absolute left-4 md:left-0 bottom-9"></span>
       </section>
 
       <section

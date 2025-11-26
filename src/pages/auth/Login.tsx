@@ -1,20 +1,20 @@
-import React from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { motion } from 'framer-motion';
-import { Eye, EyeOff } from 'lucide-react';
-import { Button } from '../../components/common/Button';
-import { Input } from '../../components/common/Input';
-import { Card } from '../../components/common/Card';
-import { useAuthStore } from '../../stores/useAuthStore';
-import authService from '../../services/auth.service';
-import { ROUTES } from '../../config/constants';
+import React from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { motion } from "framer-motion";
+import { Eye, EyeOff } from "lucide-react";
+import { Button } from "../../components/common/Button";
+import { Input } from "../../components/common/Input";
+import { Card } from "../../components/common/Card";
+import { useAuthStore } from "../../stores/useAuthStore";
+import authService from "../../services/auth.service";
+import { ROUTES } from "../../config/constants";
 
 const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -26,7 +26,7 @@ export const Login: React.FC = () => {
   const navigate = useNavigate();
   const setUser = useAuthStore((state) => state.setUser);
 
-  const isAdmin = searchParams.get('type') === 'admin';
+  const isAdmin = searchParams.get("type") === "admin";
 
   const {
     register,
@@ -40,20 +40,25 @@ export const Login: React.FC = () => {
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     try {
-      const response = isAdmin 
+      const response = isAdmin
         ? await authService.adminLogin(data)
         : await authService.login(data);
 
-      if (response.success && response.data) {
-        setUser(response.data.user);
-        const redirectTo = isAdmin ? ROUTES.ADMIN_DASHBOARD : ROUTES.INTERN_DASHBOARD;
+      console.log(response);
+
+      if (response.status === true) {
+        setUser(response.data);
+        const redirectTo =
+          response.data?.role === "admin"
+            ? ROUTES.ADMIN_DASHBOARD
+            : ROUTES.INTERN_DASHBOARD;
         navigate(redirectTo);
       } else {
-        setError('root', { message: response.message || 'Login failed' });
+        setError("root", { message: response.message || "Login failed" });
       }
     } catch (error: any) {
-      setError('root', { 
-        message: error.message || 'An error occurred during login' 
+      setError("root", {
+        message: error.message || "An error occurred during login",
       });
     } finally {
       setIsLoading(false);
@@ -74,10 +79,12 @@ export const Login: React.FC = () => {
               <span className="text-white font-bold text-2xl">IP</span>
             </div>
             <h2 className="text-3xl font-bold text-gray-900">
-              {isAdmin ? 'Admin Login' : 'Welcome Back'}
+              {isAdmin ? "Admin Login" : "Welcome Back"}
             </h2>
             <p className="text-gray-600 mt-2">
-              {isAdmin ? 'Access your admin dashboard' : 'Sign in to your intern account'}
+              {isAdmin
+                ? "Access your admin dashboard"
+                : "Sign in to your intern account"}
             </p>
           </div>
 
@@ -91,7 +98,7 @@ export const Login: React.FC = () => {
             <Input
               label="Email Address"
               type="email"
-              {...register('email')}
+              {...register("email")}
               error={errors.email?.message}
               placeholder="Enter your email"
             />
@@ -99,8 +106,8 @@ export const Login: React.FC = () => {
             <div className="relative">
               <Input
                 label="Password"
-                type={showPassword ? 'text' : 'password'}
-                {...register('password')}
+                type={showPassword ? "text" : "password"}
+                {...register("password")}
                 error={errors.password?.message}
                 placeholder="Enter your password"
               />
@@ -109,7 +116,11 @@ export const Login: React.FC = () => {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-8 text-gray-400 hover:text-gray-600"
               >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
               </button>
             </div>
 
@@ -121,8 +132,8 @@ export const Login: React.FC = () => {
                 />
                 <span className="ml-2 text-sm text-gray-600">Remember me</span>
               </label>
-              <Link 
-                to="/forgot-password" 
+              <Link
+                to="/forgot-password"
                 className="text-sm text-[#007bff] hover:underline"
               >
                 Forgot password?
@@ -135,15 +146,18 @@ export const Login: React.FC = () => {
               className="w-full"
               size="lg"
             >
-              {isAdmin ? 'Sign In to Admin' : 'Sign In'}
+              {isAdmin ? "Sign In to Admin" : "Sign In"}
             </Button>
           </form>
 
           {!isAdmin && (
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
-                Don't have an account?{' '}
-                <Link to={ROUTES.APPLY} className="text-[#007bff] hover:underline font-medium">
+                Don't have an account?{" "}
+                <Link
+                  to={ROUTES.APPLY}
+                  className="text-[#007bff] hover:underline font-medium"
+                >
                   Apply here
                 </Link>
               </p>
@@ -151,11 +165,11 @@ export const Login: React.FC = () => {
           )}
 
           <div className="mt-4 text-center">
-            <Link 
+            <Link
               to={isAdmin ? ROUTES.LOGIN : `${ROUTES.LOGIN}?type=admin`}
               className="text-sm text-gray-500 hover:text-[#007bff]"
             >
-              {isAdmin ? '← Back to Intern Login' : 'Admin Login →'}
+              {isAdmin ? "← Back to Intern Login" : "Admin Login →"}
             </Link>
           </div>
         </Card>

@@ -115,7 +115,7 @@ export const Cohorts: React.FC = () => {
   );
 
   return (
-    <div className="space-y-8">
+    <div className="mt-28 space-y-8">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>

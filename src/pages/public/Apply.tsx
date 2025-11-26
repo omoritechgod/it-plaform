@@ -4,14 +4,14 @@ import { CheckCircle, User, Code, FileText, Video } from "lucide-react";
 import { Button } from "../../components/common/Button";
 import { Card } from "../../components/common/Card";
 import { VideoRecorder } from "../../components/forms/VideoRecorder";
-import internService from "../../services/intern.service";
 import SubHero from "../../components/common/SubHero";
 import { ROUTES } from "../../config/constants";
 import { useApplyStore } from "../../stores/useApplystore";
 import PersonalInfo from "../../components/applyform/PersonalInfo";
 import Skills from "../../components/applyform/Skills";
 import AgreeToTerms from "../../components/applyform/AgreeToTerms";
-
+import { toast } from "react-toastify";
+import authService from "../../services/auth.service";
 
 export const Apply: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -22,6 +22,7 @@ export const Apply: React.FC = () => {
     name,
     email,
     password,
+    phone,
     confirmPassword,
     agreement_accepted,
     skills,
@@ -46,28 +47,34 @@ export const Apply: React.FC = () => {
         agreement_accepted,
         confirmPassword,
         skills,
-        videoFile,
+        phone,
+        // videoFile,
       };
 
       // if (!data.videoFile) {
       //   alert("video must be uploaded");
       // }
 
-      // await internService.submitApplication(data);
+      const response = await authService.signup(data);
 
-      console.log(data);
+      console.log(response);
 
-      setSubmitted(true)
-      setTimeout(() => {
-        setSubmitted(false)
-      }, 20000);
+      if (response.status === true) {
+        setSubmitted(true);
+        setTimeout(() => {
+          setSubmitted(false);
+        }, 20000);
+
+        toast.success(response.message);
+      }
 
       reset();
     } catch (error) {
       console.log(error);
-    }finally{
-      setIsLoading(false)
-      setCurrentStep(1)
+      toast.error("check your network connection and try again");
+    } finally {
+      setIsLoading(false);
+      setCurrentStep(1);
     }
   };
 
