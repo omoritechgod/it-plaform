@@ -4,6 +4,9 @@ import { Plus, Users, Calendar, Settings, Trash2, Edit, ToggleLeft, ToggleRight 
 import { Button } from '../../components/common/Button';
 import { Card } from '../../components/common/Card';
 import { Input } from '../../components/common/Input';
+import AdminService from "../../services/admin.service";
+
+
 
 interface Cohort {
   id: string;
@@ -58,19 +61,42 @@ export const Cohorts: React.FC = () => {
     },
   ]);
 
-  const toggleAccepting = (cohortId: string) => {
-    setCohorts(cohorts.map(cohort => 
-      cohort.id === cohortId 
-        ? { ...cohort, is_accepting: !cohort.is_accepting }
-        : cohort
-    ));
-  };
+  const toggleAccepting = async (cohort: Cohort) => {
+  const previousState = cohort.is_accepting;
 
-  const deleteCohort = (cohortId: string) => {
-    if (window.confirm('Are you sure you want to delete this cohort?')) {
-      setCohorts(cohorts.filter(cohort => cohort.id !== cohortId));
-    }
-  };
+  // Optimistic UI update
+  setCohorts(cohorts.map(c => 
+    c.id === cohort.id ? { ...c, is_accepting: !c.is_accepting } : c
+  ));
+
+  try {
+    await AdminService.toggleAccepting(cohort.id, !previousState);
+  } catch (error) {
+    console.error("Failed to toggle cohort status", error);
+
+    // Revert UI if API fails
+    setCohorts(cohorts.map(c => 
+      c.id === cohort.id ? { ...c, is_accepting: previousState } : c
+    ));
+
+    alert("Could not update cohort status. Please try again.");
+  }
+};
+
+
+  const deleteCohort = async (cohortId: string) => {
+  if (!window.confirm('Are you sure you want to delete this cohort?')) return;
+
+  try {
+    await AdminService.deleteCohort(cohortId); // ✅ API call
+    setCohorts(cohorts.filter(cohort => cohort.id !== cohortId)); // update UI
+    alert('Cohort deleted successfully.');
+  } catch (error) {
+    console.error('Failed to delete cohort', error);
+    alert('Could not delete cohort. Please try again.');
+  }
+};
+
 
   const CreateCohortModal = () => (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -191,20 +217,13 @@ export const Cohorts: React.FC = () => {
                     <p className="text-gray-600 text-sm mt-1">{cohort.description}</p>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() => toggleAccepting(cohort.id)}
-                      className={`p-2 rounded-lg transition-colors ${
-                        cohort.is_accepting 
-                          ? 'text-green-600 hover:bg-green-50' 
-                          : 'text-gray-400 hover:bg-gray-50'
-                      }`}
-                    >
-                      {cohort.is_accepting ? (
-                        <ToggleRight className="w-6 h-6" />
-                      ) : (
-                        <ToggleLeft className="w-6 h-6" />
-                      )}
-                    </button>
+                    <button onClick={() => toggleAccepting(cohort)}
+                      className={`p-2 rounded-lg transition-colors ${ cohort.is_accepting ? 'text-green-600 hover:bg-green-50' : 'text-gray-400 hover:bg-gray-50'
+  }`}
+>
+  {cohort.is_accepting ? <ToggleRight className="w-6 h-6" /> : <ToggleLeft className="w-6 h-6" />}
+</button>
+
                     <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
                       <Edit className="w-5 h-5" />
                     </button>
