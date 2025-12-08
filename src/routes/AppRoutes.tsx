@@ -1,27 +1,34 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { PublicLayout } from '../layouts/PublicLayout';
-import { AdminLayout } from '../layouts/AdminLayout';
-import { InternLayout } from '../layouts/InternLayout';
-import { Home } from '../pages/public/Home';
-import { Apply } from '../pages/public/Apply';
-import { Login } from '../pages/auth/Login';
-import { AdminDashboard } from '../pages/admin/Dashboard';
-import { Cohorts } from '../pages/admin/Cohorts';
-import { Candidates } from '../pages/admin/Candidates';
-import { Wallets } from '../pages/admin/Wallets';
-import { InternDashboard } from '../pages/intern/Dashboard';
-import { LearningHub } from '../pages/intern/LearningHub';
-import { Wallet } from '../pages/intern/Wallet';
-import { useAuth } from '../hooks/useAuth';
-import { ROUTES, USER_ROLES } from '../config/constants';
-import About from '../pages/About';
-import Jobs from '../pages/public/Jobs';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { PublicLayout } from "../layouts/PublicLayout";
+import { AdminLayout } from "../layouts/AdminLayout";
+import { InternLayout } from "../layouts/InternLayout";
+import { Home } from "../pages/public/Home";
+import { Apply } from "../pages/public/Apply";
+import { Login } from "../pages/auth/Login";
+import { AdminDashboard } from "../pages/admin/Dashboard";
+import { Cohorts } from "../pages/admin/Cohorts";
+import { Candidates } from "../pages/admin/Candidates";
+import { Wallets } from "../pages/admin/Wallets";
+import { InternDashboard } from "../pages/intern/Dashboard";
+import { LearningHub } from "../pages/intern/LearningHub";
+import { Wallet } from "../pages/intern/Wallet";
+import { useAuth } from "../hooks/useAuth";
+import { ROUTES } from "../config/constants";
+import About from "../pages/About";
+import Jobs from "../pages/public/Jobs";
+import { useAuthStore } from "../stores/useAuthStore";
 
-const ProtectedRoute: React.FC<{ 
-  children: React.ReactNode; 
-}> = ({ children}) => {
-  const {  isAuthenticated, isLoading } = useAuth();
+const ProtectedRoute: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
+  const { isAuthenticated, isLoading } = useAuth();
+  const {user} = useAuthStore()
 
   if (isLoading) {
     return (
@@ -35,9 +42,14 @@ const ProtectedRoute: React.FC<{
     return <Navigate to={ROUTES.LOGIN} replace />;
   }
 
-  // if (requiredRole && user?.role !== requiredRole) {
-  //   return <Navigate to={ROUTES.HOME} replace />;
-  // }
+  if (
+    !user?.role &&
+    user?.role !== "super_admin" &&
+    user?.role !== "intern" &&
+    user?.role !== "admin"
+  ) {
+    return <Navigate to={ROUTES.HOME} replace />;
+  }
 
   return <>{children}</>;
 };
@@ -66,14 +78,26 @@ export const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Navigate to={ROUTES.ADMIN_DASHBOARD} replace />} />
+          <Route
+            index
+            element={<Navigate to={ROUTES.ADMIN_DASHBOARD} replace />}
+          />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="cohorts" element={<Cohorts />} />
           <Route path="candidates" element={<Candidates />} />
-          <Route path="tests" element={<div>Tests Management Coming Soon</div>} />
-          <Route path="projects" element={<div>Projects Management Coming Soon</div>} />
+          <Route
+            path="tests"
+            element={<div>Tests Management Coming Soon</div>}
+          />
+          <Route
+            path="projects"
+            element={<div>Projects Management Coming Soon</div>}
+          />
           <Route path="wallets" element={<Wallets />} />
-          <Route path="withdrawals" element={<div>Withdrawals Management Coming Soon</div>} />
+          <Route
+            path="withdrawals"
+            element={<div>Withdrawals Management Coming Soon</div>}
+          />
           <Route path="reports" element={<div>Reports Coming Soon</div>} />
         </Route>
 
@@ -86,14 +110,35 @@ export const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Navigate to={ROUTES.ADMIN_DASHBOARD} replace />} />
+          <Route
+            index
+            element={<Navigate to={ROUTES.ADMIN_DASHBOARD} replace />}
+          />
           <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="cohorts" element={<div>Cohorts Management Coming Soon</div>} />
-          <Route path="candidates" element={<div>Candidates Management Coming Soon</div>} />
-          <Route path="tests" element={<div>Tests Management Coming Soon</div>} />
-          <Route path="projects" element={<div>Projects Management Coming Soon</div>} />
-          <Route path="wallets" element={<div>Wallets Management Coming Soon</div>} />
-          <Route path="withdrawals" element={<div>Withdrawals Management Coming Soon</div>} />
+          <Route
+            path="cohorts"
+            element={<div>Cohorts Management Coming Soon</div>}
+          />
+          <Route
+            path="candidates"
+            element={<div>Candidates Management Coming Soon</div>}
+          />
+          <Route
+            path="tests"
+            element={<div>Tests Management Coming Soon</div>}
+          />
+          <Route
+            path="projects"
+            element={<div>Projects Management Coming Soon</div>}
+          />
+          <Route
+            path="wallets"
+            element={<div>Wallets Management Coming Soon</div>}
+          />
+          <Route
+            path="withdrawals"
+            element={<div>Withdrawals Management Coming Soon</div>}
+          />
           <Route path="reports" element={<div>Reports Coming Soon</div>} />
         </Route>
 
@@ -106,7 +151,10 @@ export const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Navigate to={ROUTES.INTERN_DASHBOARD} replace />} />
+          <Route
+            index
+            element={<Navigate to={ROUTES.INTERN_DASHBOARD} replace />}
+          />
           <Route path="dashboard" element={<InternDashboard />} />
           <Route path="learning" element={<LearningHub />} />
           <Route path="test" element={<div>Skill Test Coming Soon</div>} />
