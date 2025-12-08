@@ -29,17 +29,28 @@ export const Apply: React.FC = () => {
     reset,
   } = useApplyStore();
 
-  const next = () => {
-    setCurrentStep((prev) => prev + 1);
-  };
-
-  const previous = () => {
-    setCurrentStep((prev) => prev + 1);
-  };
+  const next = () => setCurrentStep((prev) => prev + 1);
+  const previous = () => setCurrentStep((prev) => prev - 1);
 
   const handleSubmit = async () => {
     try {
+      // PASSWORD VALIDATION
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+      if (!passwordRegex.test(password)) {
+        toast.error(
+          "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and be at least 8 characters long."
+        );
+        return; // Stop submission if invalid
+      }
+
+      if (password !== confirmPassword) {
+        toast.error("Passwords do not match");
+        return;
+      }
+
       setIsLoading(true);
+
       const data = {
         name,
         email,
@@ -51,20 +62,13 @@ export const Apply: React.FC = () => {
         // videoFile,
       };
 
-      // if (!data.videoFile) {
-      //   alert("video must be uploaded");
-      // }
-
       const response = await authService.signup(data);
 
       console.log(response);
 
       if (response.status === true) {
         setSubmitted(true);
-        setTimeout(() => {
-          setSubmitted(false);
-        }, 20000);
-
+        setTimeout(() => setSubmitted(false), 20000);
         toast.success(response.message);
       }
 
@@ -126,13 +130,13 @@ export const Apply: React.FC = () => {
               <div key={step.number} className="flex items-center">
                 <div
                   className={`
-                  w-12 h-12 rounded-full flex items-center justify-center text-sm font-medium
-                  ${
-                    currentStep >= step.number
-                      ? "bg-white text-[#007bff]"
-                      : "bg-white bg-opacity-20 text-white"
-                  }
-                `}
+                    w-12 h-12 rounded-full flex items-center justify-center text-sm font-medium
+                    ${
+                      currentStep >= step.number
+                        ? "bg-white text-[#007bff]"
+                        : "bg-white bg-opacity-20 text-white"
+                    }
+                  `}
                 >
                   {currentStep > step.number ? (
                     <CheckCircle className="w-6 h-6" />
@@ -143,23 +147,23 @@ export const Apply: React.FC = () => {
                 {index < steps.length - 1 && (
                   <div
                     className={`
-                    w-16 h-1 mx-2
-                    ${
-                      currentStep > step.number
-                        ? "bg-white"
-                        : "bg-white bg-opacity-20"
-                    }
-                  `}
+                      w-16 h-1 mx-2
+                      ${
+                        currentStep > step.number
+                          ? "bg-white"
+                          : "bg-white bg-opacity-20"
+                      }
+                    `}
                   />
                 )}
               </div>
             ))}
           </div>
+
           <div className="text-center text-white">
             <h1 className="text-3xl font-bold mb-2">Apply for Internship</h1>
             <p className="text-blue-100">
-              Step {currentStep} of {steps.length}:{" "}
-              {steps[currentStep - 1].title}
+              Step {currentStep} of {steps.length}: {steps[currentStep - 1].title}
             </p>
           </div>
         </div>
@@ -171,47 +175,25 @@ export const Apply: React.FC = () => {
         >
           <Card className="max-w-2xl mx-auto">
             <div className="space-y-6">
-              {/* {errors.root && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                  <p className="text-sm text-red-600">{errors.root.message}</p>
-                </div>
-              )} */}
-
-              {/* Step 1: Personal Information */}
               {currentStep === 1 && <PersonalInfo next={next} />}
-
-              {/* Step 2: Skills Selection */}
               {currentStep === 2 && <Skills next={next} previous={previous} />}
+              {currentStep === 3 && <AgreeToTerms next={next} previous={previous} />}
 
-              {/* Step 3: Agreement */}
-              {currentStep === 3 && (
-                <AgreeToTerms next={next} previous={previous} />
-              )}
-
-              {/* Step 4: Video Recording */}
               {currentStep === 4 && (
                 <div className="space-y-6">
                   <div className="text-center mb-6">
                     <Video className="w-12 h-12 text-[#007bff] mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-gray-900">
-                      Affirmation Video
-                    </h2>
-                    <p className="text-gray-600">
-                      Record a brief introduction video
-                    </p>
+                    <h2 className="text-2xl font-bold text-gray-900">Affirmation Video</h2>
+                    <p className="text-gray-600">Record a brief introduction video</p>
                   </div>
 
-                  <VideoRecorder
-                    onVideoCapture={setVideoFile}
-                    maxDuration={120}
-                  />
+                  <VideoRecorder onVideoCapture={setVideoFile} maxDuration={120} />
                 </div>
               )}
 
-              {/* Navigation Buttons */}
               <div className="flex justify-between pt-6">
                 <div className="ml-auto">
-                  {currentStep === 4 ? (
+                  {currentStep === 4 && (
                     <Button
                       type="submit"
                       onClick={handleSubmit}
@@ -220,7 +202,7 @@ export const Apply: React.FC = () => {
                     >
                       Submit Application
                     </Button>
-                  ) : null}
+                  )}
                 </div>
               </div>
             </div>
