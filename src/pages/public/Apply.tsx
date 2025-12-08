@@ -12,6 +12,7 @@ import Skills from "../../components/applyform/Skills";
 import AgreeToTerms from "../../components/applyform/AgreeToTerms";
 import { toast } from "react-toastify";
 import authService from "../../services/auth.service";
+import { any } from "zod";
 
 export const Apply: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -73,9 +74,15 @@ export const Apply: React.FC = () => {
       }
 
       reset();
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      toast.error("check your network connection and try again");
+      let message = "";
+
+      error.errors.forEach((element: any) => {
+        message += " " + element;
+      });
+
+      toast.error(message || "check your network connection and try again");
     } finally {
       setIsLoading(false);
       setCurrentStep(1);
@@ -163,7 +170,8 @@ export const Apply: React.FC = () => {
           <div className="text-center text-white">
             <h1 className="text-3xl font-bold mb-2">Apply for Internship</h1>
             <p className="text-blue-100">
-              Step {currentStep} of {steps.length}: {steps[currentStep - 1].title}
+              Step {currentStep} of {steps.length}:{" "}
+              {steps[currentStep - 1].title}
             </p>
           </div>
         </div>
@@ -177,17 +185,26 @@ export const Apply: React.FC = () => {
             <div className="space-y-6">
               {currentStep === 1 && <PersonalInfo next={next} />}
               {currentStep === 2 && <Skills next={next} previous={previous} />}
-              {currentStep === 3 && <AgreeToTerms next={next} previous={previous} />}
+              {currentStep === 3 && (
+                <AgreeToTerms next={next} previous={previous} />
+              )}
 
               {currentStep === 4 && (
                 <div className="space-y-6">
                   <div className="text-center mb-6">
                     <Video className="w-12 h-12 text-[#007bff] mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-gray-900">Affirmation Video</h2>
-                    <p className="text-gray-600">Record a brief introduction video</p>
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      Affirmation Video
+                    </h2>
+                    <p className="text-gray-600">
+                      Record a brief introduction video
+                    </p>
                   </div>
 
-                  <VideoRecorder onVideoCapture={setVideoFile} maxDuration={120} />
+                  <VideoRecorder
+                    onVideoCapture={setVideoFile}
+                    maxDuration={120}
+                  />
                 </div>
               )}
 
