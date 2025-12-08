@@ -136,14 +136,14 @@ export const Home: React.FC = () => {
         <div className="w-full h-full bg-black/80 hero-raduis backdrop-saturate-100 z-30 absolute left-0 right-0"></div>
         <div className="w-full h-full z-40 absolute hero-raduis left-0 right-0 px-5 md:px-10 lg:px-20">
           <div className="w-full h-full flex items-center pt-[5%] leading-10 justify-center flex-col gap-4">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
+            <h1 className="text-4xl flex items-center justify-center gap-2 flex-wrap sm:text-5xl md:text-6xl font-extrabold leading-tight">
               {["Launch", " Your ", "Tech ", "Career"].map((word, index) => (
                 <motion.span
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.3 }}
-                  className="text transition-colors duration-500"
+                  className=" transition-colors duration-500"
                   style={{
                     color: index === count ? "#0077C0" : "#FAFAFA",
                   }}
@@ -152,7 +152,7 @@ export const Home: React.FC = () => {
                 </motion.span>
               ))}
             </h1>
-            <p className="text-base sm:text-lg md:text-xl max-w-2xl md:text-center text-gray-400 font-normal">
+            <p className="text-base sm:text-lg md:text-xl max-w-2xl text-center text-gray-400 font-normal">
               Join our comprehensive internship program and transform from a
               beginner to a skilled professional ready for the tech industry.
             </p>
