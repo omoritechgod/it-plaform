@@ -12,7 +12,6 @@ import Skills from "../../components/applyform/Skills";
 import AgreeToTerms from "../../components/applyform/AgreeToTerms";
 import { toast } from "react-toastify";
 import authService from "../../services/auth.service";
-import { any } from "zod";
 
 export const Apply: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
