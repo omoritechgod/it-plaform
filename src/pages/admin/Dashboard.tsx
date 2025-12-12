@@ -160,7 +160,7 @@ export const AdminDashboard: React.FC = () => {
         <Card>
           <h3 className="text-xl font-semibold text-gray-900 mb-6">Quick Actions</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <button className="p-4 text-left bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200">
+            <button className="p-4 text-left bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-all duration-200">
               <Users className="w-6 h-6 mb-2" />
               <p className="font-medium">Add New Cohort</p>
               <p className="text-sm opacity-90">Create a new internship cohort</p>
