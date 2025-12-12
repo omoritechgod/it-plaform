@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Users, BookOpen, DollarSign, TrendingUp, Clock, CheckCircle } from 'lucide-react';
 import { Card } from '../../components/common/Card';
-import AdminService from '../../services/admin.service';
 
 export const AdminDashboard: React.FC = () => {
-  // State to hold dynamic stats
-  const [stats, setStats] = useState([
+  const stats = [
     {
       title: 'Total Interns',
       value: '156',
@@ -39,7 +37,7 @@ export const AdminDashboard: React.FC = () => {
       color: 'text-orange-600',
       bgColor: 'bg-orange-50',
     },
-  ]);
+  ];
 
   const recentActivity = [
     {
@@ -72,59 +70,8 @@ export const AdminDashboard: React.FC = () => {
     },
   ];
 
-  // Fetch dashboard stats from API
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const response = await AdminService.getDashboardStats();
-        console.log('Dashboard stats response:', response);
-        if (response.status && response.data) {
-          setStats([
-            {
-              title: 'Total Interns',
-              value: response.data.total_interns,
-              change: '+12%', // Or compute dynamically if API provides previous data
-              icon: <Users className="w-8 h-8" />,
-              color: 'text-blue-600',
-              bgColor: 'bg-blue-50',
-            },
-            {
-              title: 'Active Cohorts',
-              value: response.data.active_cohorts,
-              change: '+1',
-              icon: <BookOpen className="w-8 h-8" />,
-              color: 'text-green-600',
-              bgColor: 'bg-green-50',
-            },
-            {
-              title: 'Wallet Balance',
-              value: `₦${response.data.wallet_balance.toLocaleString()}`,
-              change: '-8.2%',
-              icon: <DollarSign className="w-8 h-8" />,
-              color: 'text-purple-600',
-              bgColor: 'bg-purple-50',
-            },
-            {
-              title: 'Projects Active',
-              value: response.data.active_projects,
-              change: '+5',
-              icon: <TrendingUp className="w-8 h-8" />,
-              color: 'text-orange-600',
-              bgColor: 'bg-orange-50',
-            },
-          ]);
-        }
-      } catch (error) {
-        console.error('Failed to fetch dashboard stats:', error);
-      }
-    };
-
-    fetchStats();
-  }, []);
-
   return (
     <div className="mt-28 space-y-8">
-      {/* Original code remains untouched */}
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
@@ -158,7 +105,84 @@ export const AdminDashboard: React.FC = () => {
         ))}
       </div>
 
-      {/* The rest of your Dashboard JSX remains unchanged */}
+      {/* Charts and Recent Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Chart Placeholder */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="lg:col-span-2"
+        >
+          <Card>
+            <h3 className="text-xl font-semibold text-gray-900 mb-6">Enrollment Trends</h3>
+            <div className="h-64 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg flex items-center justify-center">
+              <p className="text-gray-500">Chart visualization coming soon</p>
+            </div>
+          </Card>
+        </motion.div>
+
+        {/* Recent Activity */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+        >
+          <Card>
+            <h3 className="text-xl font-semibold text-gray-900 mb-6">Recent Activity</h3>
+            <div className="space-y-4">
+              {recentActivity.map((activity, index) => (
+                <div key={index} className="flex items-start space-x-3 pb-4 border-b border-gray-100 last:border-b-0 last:pb-0">
+                  <div className={`${activity.color} p-2 rounded-lg bg-gray-50`}>
+                    {activity.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900">{activity.title}</p>
+                    <p className="text-sm text-gray-600">{activity.description}</p>
+                    <div className="flex items-center mt-1 text-xs text-gray-500">
+                      <Clock className="w-3 h-3 mr-1" />
+                      {activity.time}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </motion.div>
+      </div>
+
+      {/* Quick Actions */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.6 }}
+      >
+        <Card>
+          <h3 className="text-xl font-semibold text-gray-900 mb-6">Quick Actions</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <button className="p-4 text-left bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-all duration-200">
+              <Users className="w-6 h-6 mb-2" />
+              <p className="font-medium">Add New Cohort</p>
+              <p className="text-sm opacity-90">Create a new internship cohort</p>
+            </button>
+            <button className="p-4 text-left bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200">
+              <DollarSign className="w-6 h-6 mb-2" />
+              <p className="font-medium">Fund Wallet</p>
+              <p className="text-sm opacity-90">Add funds to admin wallet</p>
+            </button>
+            <button className="p-4 text-left bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-200">
+              <BookOpen className="w-6 h-6 mb-2" />
+              <p className="font-medium">Create Test</p>
+              <p className="text-sm opacity-90">Add new skill assessment</p>
+            </button>
+            <button className="p-4 text-left bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-200">
+              <TrendingUp className="w-6 h-6 mb-2" />
+              <p className="font-medium">Post Project</p>
+              <p className="text-sm opacity-90">Create new intern project</p>
+            </button>
+          </div>
+        </Card>
+      </motion.div>
     </div>
   );
 };
