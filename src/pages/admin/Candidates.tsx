@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Filter, Mail, Download, Trash2, CheckCircle, XCircle, Eye, Users } from 'lucide-react';
 import { Button } from '../../components/common/Button';
 import { Card } from '../../components/common/Card';
 import { Input } from '../../components/common/Input';
+import AdminService from '../../services/admin.service';
+
 
 interface Candidate {
   id: string;
@@ -24,40 +26,23 @@ export const Candidates: React.FC = () => {
   const [showBulkEmailModal, setShowBulkEmailModal] = useState(false);
 
   // Mock data
-  const [candidates, setCandidates] = useState<Candidate[]>([
-    {
-      id: '1',
-      name: 'John Doe',
-      email: 'john@example.com',
-      skills: ['React', 'JavaScript', 'Node.js'],
-      stage: 'skill_test',
-      applied_at: '2025-01-15',
-      test_score: 85,
-      status: 'pending',
-      cohort: 'Frontend Development 2025',
-    },
-    {
-      id: '2',
-      name: 'Sarah Wilson',
-      email: 'sarah@example.com',
-      skills: ['UI/UX Design', 'Figma', 'Adobe XD'],
-      stage: 'interview',
-      applied_at: '2025-01-14',
-      test_score: 92,
-      status: 'approved',
-      cohort: 'UI/UX Design 2025',
-    },
-    {
-      id: '3',
-      name: 'Mike Johnson',
-      email: 'mike@example.com',
-      skills: ['Python', 'Django', 'PostgreSQL'],
-      stage: 'application',
-      applied_at: '2025-01-13',
-      status: 'pending',
-      cohort: 'Backend Development 2025',
-    },
-  ]);
+const [candidates, setCandidates] = useState<User[]>([]);
+
+
+  useEffect(() => {
+    const fetchCandidates = async () => {
+      try {
+        const response = await AdminService.getCandidates();
+        if (response.status) {
+          setCandidates(response.data); // assuming your API returns candidates under data
+        }
+      } catch (error) {
+        console.error('Failed to fetch candidates:', error);
+      }
+    };
+
+    fetchCandidates();
+  }, []);
 
   const stages = [
     { value: 'all', label: 'All Stages' },
