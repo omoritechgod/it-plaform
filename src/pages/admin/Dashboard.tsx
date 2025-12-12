@@ -77,6 +77,7 @@ export const AdminDashboard: React.FC = () => {
     const fetchStats = async () => {
       try {
         const response = await AdminService.getDashboardStats();
+        console.log('Dashboard stats response:', response);
         if (response.status && response.data) {
           setStats([
             {
