@@ -219,6 +219,18 @@ class AdminService {
   async getPaymentReport(filters?: any): Promise<ApiResponse<any>> {
     return api.get("/admin/reports/payments", { params: filters });
   }
+
+  async createApply(
+    data: {
+      cohort_id: number;
+      form_schema: {
+        fields: { name: string; type: string }[];
+        agreement_text: string;
+      };
+    }
+  ): Promise<ApiResponse> {
+    return api.post(`/api/applications`, {data});
+  }
 }
 
 export default new AdminService();
