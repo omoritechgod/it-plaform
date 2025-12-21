@@ -17,13 +17,13 @@ const ApplicationForm = ({
   showCreateModal,
 }: CreateCohortModalProps) => {
   const [formConfig, setFormConfig] = React.useState<{
-    cohort_id: number;
+    cohort_id: string;
     form_schema: {
       fields: { name: string; type: string }[];
       agreement_text: string;
     };
   }>({
-    cohort_id: 1,
+    cohort_id: "",
     form_schema: {
       fields: [],
       agreement_text: "i agree to the terms and conditions",
@@ -39,7 +39,7 @@ const ApplicationForm = ({
   });
 
   const addField = () => {
-    if (newfields.name && newfields.type) {
+    if (newfields.name && newfields.type && formConfig.cohort_id) {
       setFormConfig((prev) => ({
         ...prev,
         form_schema: {
@@ -86,6 +86,16 @@ const ApplicationForm = ({
         toast.error(error.message || "Failed to create application form");
       },
     });
+    console.log("Form Config Submitted:", formConfig);
+    setFormConfig({
+      cohort_id: "",
+      form_schema: {
+        fields: [],
+        agreement_text: "i agree to the terms and conditions",
+      },
+    });
+
+    // setShowCreateModal(false);
   };
 
   return (
@@ -97,7 +107,7 @@ const ApplicationForm = ({
       >
         <div className="flex space-x-3 pb-4">
           <button
-            onClick={ handleSubmit}
+            onClick={handleSubmit}
             type="button"
             className="flex-1 transition-all hover:shadow-xl bg-green-600 px-4 py-2 rounded-lg text-white hover:bg-green-700 flex items-center justify-center"
           >
@@ -111,7 +121,15 @@ const ApplicationForm = ({
             Cancel
           </Button>
         </div>
-
+        <Input
+          className="mb-2"
+          label="Cohort ID"
+          value={formConfig.cohort_id}
+          onChange={(e) =>
+            setFormConfig({ ...formConfig, cohort_id: e.target.value })
+          }
+          placeholder="Cohort ID"
+        />
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Field Name
@@ -156,10 +174,11 @@ const ApplicationForm = ({
         <div className="fixed top-10 right-10 bg-white p-4 rounded-lg shadow-lg z-60 w-80">
           <h3 className="text-lg font-semibold mb-4">Form Preview</h3>
           {formConfig.form_schema.fields.map((field, index) => (
-            <div key={index} className="mb-4">
+            <div key={index} className="mb-4 flex items-center gap-2">
               <span className="flex gap-2 items-center text-sm font-medium text-gray-700 mb-1">
                 {field.name}
               </span>
+              <span> - </span>
               <span className="block text-sm font-medium text-gray-700 mb-1">
                 {field.type}
               </span>

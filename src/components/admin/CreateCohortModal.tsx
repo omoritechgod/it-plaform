@@ -5,6 +5,9 @@ import { Button } from "../common/Button";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import adminService from "../../services/admin.service";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 interface CreateCohortModalProps {
   setShowCreateModal: (show: boolean) => void;
@@ -14,7 +17,7 @@ interface CreateCohortModalProps {
 const cohortSchema = z.object({
   name: z.string().min(3, "Cohort name must be at least 3 characters"),
   description: z.string("Description is required"),
-  startDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
+  start_date: z.string().refine((date) => !isNaN(Date.parse(date)), {
     message: "Invalid start date",
   }),
   is_accepting: z.boolean("Acceptance status is required"),
@@ -39,9 +42,29 @@ const CreateCohortModal = ({
   } = useForm<cohortData>({
     resolver: zodResolver(cohortSchema),
   });
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (data: cohortData) => {
+      const res = await adminService.createCohort(data);
+      return res;
+    },
+  });
 
   const onSubmit = (data: cohortData) => {
     console.log("Cohort Data:", data);
+    mutation.mutate(data, {
+      onSuccess: () => {
+        toast.success("Cohort created successfully");
+
+        queryClient.invalidateQueries({ queryKey: ["cohorts"] });
+
+        setShowCreateModal(false);
+      },
+      onError: (error) => {
+        toast.error(error?.message || "Failed to create cohort");
+      },
+    });
     reset();
   };
 
@@ -90,8 +113,8 @@ const CreateCohortModal = ({
           <div className="grid grid-cols-2 gap-4">
             <Input
               label="Start Date"
-              {...register("startDate")}
-              error={errors.startDate?.message}
+              {...register("start_date")}
+              error={errors.start_date?.message}
               type="date"
             />
             <div>

@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import SubHero from "../components/common/SubHero";
 import { motion } from "framer-motion";
 import CTA from "../components/common/CTA";
-import { Building2, Lightbulb, GraduationCap } from "lucide-react";
-import Title from "../components/ui/Title"
+import { Building2, Lightbulb, GraduationCap, Target, Eye } from "lucide-react";
+import Title from "../components/ui/Title";
 
 export interface CompanyArm {
   title: string;
@@ -34,7 +34,7 @@ const stats = [
 ];
 
 const About = () => {
-  const [rate, setRate] = useState({});
+  const [rate, setRate] = useState<Record<number, number>>({});
   const ref = useRef(null);
   const [count, setCount] = useState<number>(0);
 
@@ -76,34 +76,37 @@ const About = () => {
       />
 
       <section className="max-w-5xl relative py-20  px-4 md:px-0  mx-auto">
-        <motion.div className="flex flex-col gap-20 justify-center px-4 py-8 bg-white shadow-md border rounded-md items-center">
-          <div className="w-full flex justify-between items-start  text-gray-700 text-lg">
-            <h1 className="max-w-xl w-11/12 text-dark_blue text-xl mb-2">Who We Are</h1>
-            <p className="max-w-xl w-11/12">
+        <motion.div className="flex flex-col justify-center items-center">
+          <div className="w-full flex justify-center items-center flex-col px-4 py-8 text-gray-700 text-lg">
+            <p className="text-center">
               We’re building Africa’s most trusted ecosystem for experiential
-              learning — connecting passionate interns to real projects, guided
+              learning connecting passionate interns to real projects, guided
               mentorship, and growth opportunities in tech. Our mission is to
               empower the next generation of innovators by providing hands-on
               experience that bridges the gap between education and career.
             </p>
           </div>
-          <div className="w-full text-gray-700 text-lg flex flex-col gap-20">
-            <div className="flex justify-between items-start">
-              <h1 className="max-w-xl w-11/12 text-dark_blue text-xl mb-2">Mission</h1>
-              <p className="max-w-xl w-11/12">
+          <div className="w-full text-gray-700 text-lg grid md:grid-cols-2 gap-6 mt-20">
+            <div className="flex justify-center items-center px-4 py-8 bg-white shadow-md border rounded-md  flex-col">
+              <h1 className="text-dark_blue text-xl mb-2 flex items-center flex-row-reverse gap-4">
+                Mission <Target fill="#004a7c" className="w-12 text-white h-12 " />
+              </h1>
+              <p className="">
                 We’re building Africa’s most trusted ecosystem for experiential
-                learning — connecting passionate interns to real projects,
+                learning connecting passionate interns to real projects,
                 guided mentorship, and growth opportunities in tech. Our mission
                 is to empower the next generation of innovators by providing
                 hands-on experience that bridges the gap between education and
                 career.
               </p>
             </div>
-            <div className="flex justify-between items-start">
-              <h1 className="max-w-xl w-11/12 text-dark_blue text-xl mb-2">Vision</h1>
-              <p className="max-w-xl w-11/12">
+            <div className="flex justify-center items-center flex-col px-4 py-8 bg-white shadow-md border rounded-md ">
+              <h1 className="text-dark_blue flex flex-row-reverse items-center gap-4 text-xl mb-2">
+                Vision <Eye fill="#004a7c" className="w-12 text-white h-12" />
+              </h1>
+              <p className="">
                 We’re building Africa’s most trusted ecosystem for experiential
-                learning — connecting passionate interns to real projects,
+                learning connecting passionate interns to real projects,
                 guided mentorship, and growth opportunities in tech. Our mission
                 is to empower the next generation of innovators by providing
                 hands-on experience that bridges the gap between education and
