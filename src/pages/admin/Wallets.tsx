@@ -235,7 +235,7 @@ export const Wallets: React.FC = () => {
   );
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 mt-28">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>

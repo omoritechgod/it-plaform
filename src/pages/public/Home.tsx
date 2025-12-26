@@ -87,7 +87,7 @@ export const Home: React.FC = () => {
         "Receive stipends and rewards for your contributions and achievements.",
     },
   ];
-  const [rate, setRate] = useState({});
+  const [rate, setRate] = useState<{ [key: number]: number }>({});
   const ref = useRef(null);
   const [count, setCount] = useState<number>(0);
 
@@ -198,11 +198,11 @@ export const Home: React.FC = () => {
       <section className="md:max-w-5xl w-[95%] flex flex-col md:flex-row items-start justify-between py-20 gap-12  mx-auto">
         <div className="md:w-1/2">
           <h2 className="mb-6 text-dark_blue text-3xl md:text-4xl">
-            Internships should be more than checklists — they should be journeys
+            Internships should be more than checklists they should be journeys
             of growth.
           </h2>
           <p className="text-lg text-gray-600 leading-relaxed">
-            We believe internships should be more than tasks — they should be
+            We believe internships should be more than tasks they should be
             journeys of discovery and growth. Our platform connects interns with
             real-world projects, mentors, and learning paths that help them gain
             hands-on experience while developing practical skills. Whether
@@ -364,10 +364,10 @@ export const Home: React.FC = () => {
                   className="min-w-[300px] shadow-none max-h-80 p-4"
                 >
                   <div className="w-full h-full flex gap-2 flex-col text-center items-center">
-                    <div className="relative">
-                      <Quote className="absolute left-0 -top-3 w-4 h-4 text-gray-500 transform  scale-x-[-1]" />
+                    <div className="relative flex flex-col items-center gap-2">
+                      <Quote className="w-4 h-4 text-gray-500 transform  scale-x-[-1]" />
                       <p className="text-gray-500 text-xs">{item.compliment}</p>
-                      <Quote className="absolute right-0 -top-3 w-4 h-4 text-gray-500" />
+                      {/* <Quote className="absolute right-0 -top-3 w-4 h-4 text-gray-500" /> */}
                     </div>{" "}
                     <div className="flex gap-2 items-center">
                       <img
@@ -401,10 +401,10 @@ export const Home: React.FC = () => {
                   className="min-w-[300px] shadow-none max-h-80 p-4"
                 >
                   <div className="w-full h-full flex gap-4 flex-col text-center items-center">
-                    <div className="relative">
-                      <Quote className="absolute left-0 -top-3 w-4 h-4 text-gray-500 transform  scale-x-[-1]" />
+                    <div className="relative flex flex-col items-center gap-2">
+                      <Quote className="w-4 h-4 text-gray-500 transform  scale-x-[-1]" />
                       <p className="text-gray-500 text-xs">{item.compliment}</p>
-                      <Quote className="absolute right-0 -top-3 w-4 h-4 text-gray-500" />
+                      {/* <Quote className="absolute right-0 -top-3 w-4 h-4 text-gray-500" /> */}
                     </div>
 
                     <div className="flex gap-3 items-center">
@@ -439,11 +439,11 @@ export const Home: React.FC = () => {
                   className="min-w-[300px] shadow-none max-h-80 p-4"
                 >
                   <div className="w-full h-full flex gap-2 flex-col text-center items-center">
-                    <div className="relative">
-                      <Quote className="absolute left-0 -top-3 w-4 h-4 text-gray-500 transform  scale-x-[-1]" />
+                    <div className="relative flex flex-col items-center gap-2">
+                      <Quote className="w-4 h-4 text-gray-500 transform  scale-x-[-1]" />
                       <p className="text-gray-500 text-xs">{item.compliment}</p>
-                      <Quote className="absolute right-0 -top-3 w-4 h-4 text-gray-500" />
-                    </div>{" "}
+                      {/* <Quote className="absolute right-0 -top-3 w-4 h-4 text-gray-500" /> */}
+                    </div>
                     <div className="flex gap-2 items-center">
                       <img
                         src={item.image}
@@ -474,7 +474,7 @@ export const Home: React.FC = () => {
       </section>
       {/* line */}
       <div className="md:max-w-5xl w-[95%] block mx-auto py-16 border-t-2 border-gray-100 border-b-2"></div>
-     
+
       {/* CTA Section */}
       <CTA />
     </div>

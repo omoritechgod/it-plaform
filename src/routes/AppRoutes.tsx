@@ -48,7 +48,7 @@ const ProtectedRoute: React.FC<{
     user?.role !== "intern" &&
     user?.role !== "admin"
   ) {
-    return <Navigate to={ROUTES.HOME} replace />;
+    return <Navigate to={ROUTES.LOGIN} replace />;
   }
 
   return <>{children}</>;

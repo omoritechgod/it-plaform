@@ -8,14 +8,18 @@ import {
   WithdrawalRequest,
   Transaction,
 } from "../types";
+import { Candidate } from "../pages/admin/Candidates";
 
 export interface CohortData {
   name: string;
   description: string;
   start_date: string;
-  end_date: string;
-  max_interns: number;
+  max_slot: number;
   is_accepting: boolean;
+  settings: {
+    duration: string;
+    level: string;
+  };
 }
 
 export interface TestData {
@@ -72,7 +76,7 @@ class AdminService {
   }
 
   // Candidate Management
-  async getCandidates(filters?: any): Promise<ApiResponse<User[]>> {
+  async getCandidates(filters?: any): Promise<ApiResponse<Candidate[]>> {
     return api.get("/admin/candidates", { params: filters });
   }
 
@@ -101,7 +105,7 @@ class AdminService {
       params: filters,
       responseType: "blob",
     });
-    return response;
+    return response.data;
   }
 
   // Skill Tests
@@ -218,6 +222,16 @@ class AdminService {
 
   async getPaymentReport(filters?: any): Promise<ApiResponse<any>> {
     return api.get("/admin/reports/payments", { params: filters });
+  }
+
+  async createApply(data: {
+    cohort_id: string;
+    form_schema: {
+      fields: { name: string; type: string }[];
+      agreement_text: string;
+    };
+  }): Promise<ApiResponse> {
+    return api.post(`/api/application-forms`, { data });
   }
 }
 

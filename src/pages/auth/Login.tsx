@@ -141,7 +141,6 @@ export const Login: React.FC = () => {
             </div>
 
             <Button
-              type="submit"
               loading={isLoading}
               className="w-full"
               size="lg"

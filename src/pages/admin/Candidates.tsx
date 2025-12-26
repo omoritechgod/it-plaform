@@ -7,7 +7,7 @@ import { Input } from '../../components/common/Input';
 import AdminService from '../../services/admin.service';
 
 
-interface Candidate {
+export interface Candidate {
   id: string;
   name: string;
   email: string;
@@ -26,7 +26,7 @@ export const Candidates: React.FC = () => {
   const [showBulkEmailModal, setShowBulkEmailModal] = useState(false);
 
   // Mock data
-const [candidates, setCandidates] = useState<User[]>([]);
+const [candidates, setCandidates] = useState<Candidate[]>([]);
 
 
   useEffect(() => {
@@ -158,14 +158,14 @@ const [candidates, setCandidates] = useState<User[]>([]);
   );
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 mt-28">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mt-28">Candidate Management</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Candidate Management</h1>
           <p className="text-gray-600 mt-2">Review and manage intern applications</p>
         </div>
-        <div className="flex space-x-3">
+        <div className="flex items-center space-x-3">
           <Button variant="outline">
             <Download className="w-4 h-4 mr-2" />
             Export CSV
