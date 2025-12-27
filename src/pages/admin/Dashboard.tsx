@@ -88,16 +88,18 @@ export const AdminDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+          <h1 className="text-lg md:text-3xl font-bold text-gray-900">
+            Admin Dashboard
+          </h1>
           <p className="text-gray-600 mt-2">
             Overview of your internship platform
           </p>
         </div>
         <button
           onClick={() => setShowRegistrationForm(true)}
-          className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200"
+          className="min-w-40 w p-2 md:px-4 py-3 text-sm md:text-base bg-blue text-white rounded-lg hover:bg-blue/90 transition-all duration-200"
         >
-         Create Apply form
+          Create Apply form
         </button>
       </div>
 

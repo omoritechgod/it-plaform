@@ -44,7 +44,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
           { label: "Dashboard", href: ROUTES.ADMIN_DASHBOARD },
           { label: "Cohorts", href: ROUTES.ADMIN_COHORTS },
           { label: "Candidates", href: ROUTES.ADMIN_CANDIDATES },
-          { label: "Tests", href: ROUTES.ADMIN_TESTS },
+          { label: "Module", href: ROUTES.ADMIN_MODULE },
           { label: "Projects", href: ROUTES.ADMIN_PROJECTS },
           { label: "Wallets", href: ROUTES.ADMIN_WALLETS },
           { label: "Reports", href: ROUTES.ADMIN_REPORTS },

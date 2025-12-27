@@ -7,8 +7,10 @@ import {
   Project,
   WithdrawalRequest,
   Transaction,
+  TrainingModule,
 } from "../types";
 import { Candidate } from "../pages/admin/Candidates";
+import { trainingModuleData } from "../pages/admin/TrainingModule";
 
 export interface CohortData {
   name: string;
@@ -134,6 +136,16 @@ class AdminService {
     return api.post(`/admin/tests/${testId}/import-questions`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
+  }
+  // training module
+  async createTrainingModule(
+    data: trainingModuleData
+  ): Promise<ApiResponse<TrainingModule>> {
+    return api.post("/api/training/modules", data);
+  }
+
+  async getTrainingModule(): Promise<ApiResponse<TrainingModule>> {
+    return api.get("/api/training/modules");
   }
 
   // Project Management
