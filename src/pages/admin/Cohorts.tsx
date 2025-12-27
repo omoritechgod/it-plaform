@@ -9,6 +9,7 @@ import {
   Edit,
   ToggleLeft,
   ToggleRight,
+  Loader2,
 } from "lucide-react";
 import { Button } from "../../components/common/Button";
 import { Card } from "../../components/common/Card";
@@ -17,6 +18,7 @@ import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../../services/api";
 import CreateCohortModal from "../../components/admin/CreateCohortModal";
+import ErrorComponent from "../../components/ErrorComponent";
 
 interface Cohort {
   id: string;
@@ -45,6 +47,8 @@ export const Cohorts: React.FC = () => {
     data: cohorts,
     isLoading,
     isError,
+    error,
+    refetch,
   } = useQuery({
     queryKey: ["cohorts"],
     queryFn: async () => {
@@ -63,24 +67,19 @@ export const Cohorts: React.FC = () => {
 
   if (isLoading) {
     return (
-      toast.info("Loading cohorts..."),
-      (
-        <div className="bg-white/80 w-full text-gray-600 text-center h-full fixed">
-          loading...
+      <div className="fixed w-full z-50 backdrop-blur bg-black/70 flex justify-center items-center h-full left-0 bottom-0">
+        <div className="w-96 h-48 bg-blue rounded-lg shadow-lg flex flex-col justify-center items-center p-4">
+          <Loader2 className="animate-spin w-10 h-10 text-blue-700 mb-4" />
+          <p className="text-blue-600 text-lg">Loading</p>
         </div>
-      )
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="bg-white/80 w-full text-red-600 text-center h-full fixed">
-        error{" "}
       </div>
     );
   }
 
-  // const [cohorts, _setCohorts] = useState<Cohort[]>([
+  if (isError) {
+    return <ErrorComponent error={error.message} refetch={refetch} />;
+  }
+
   //   {
   //     id: "1",
   //     name: "Frontend Development Cohort 2025",
@@ -125,7 +124,6 @@ export const Cohorts: React.FC = () => {
 
       await adminService.toggleAccepting(cohortId, !target.is_accepting);
       toast.success("Cohort status updated");
-      // loadCohorts();
     } catch (err) {
       toast.error("Failed to update status");
     }
@@ -153,7 +151,7 @@ export const Cohorts: React.FC = () => {
 
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-lg md:text-3xl font-bold text-gray-900">
             Cohort Management
           </h1>
           <p className="text-gray-600 mt-2">

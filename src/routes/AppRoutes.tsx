@@ -23,12 +23,13 @@ import { ROUTES } from "../config/constants";
 import About from "../pages/About";
 import Jobs from "../pages/public/Jobs";
 import { useAuthStore } from "../stores/useAuthStore";
+import TrainingModulePage from "../pages/admin/TrainingModule";
 
 const ProtectedRoute: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
-  const {user} = useAuthStore()
+  const { user } = useAuthStore();
 
   if (isLoading) {
     return (
@@ -85,10 +86,7 @@ export const AppRoutes: React.FC = () => {
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="cohorts" element={<Cohorts />} />
           <Route path="candidates" element={<Candidates />} />
-          <Route
-            path="tests"
-            element={<div>Tests Management Coming Soon</div>}
-          />
+          <Route path="module" element={<TrainingModulePage />} />
           <Route
             path="projects"
             element={<div>Projects Management Coming Soon</div>}
