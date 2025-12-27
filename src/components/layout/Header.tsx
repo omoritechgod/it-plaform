@@ -44,7 +44,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
           { label: "Dashboard", href: ROUTES.ADMIN_DASHBOARD },
           { label: "Cohorts", href: ROUTES.ADMIN_COHORTS },
           { label: "Candidates", href: ROUTES.ADMIN_CANDIDATES },
-          { label: "Tests", href: ROUTES.ADMIN_TESTS },
+          { label: "Module", href: ROUTES.ADMIN_MODULE },
           { label: "Projects", href: ROUTES.ADMIN_PROJECTS },
           { label: "Wallets", href: ROUTES.ADMIN_WALLETS },
           { label: "Reports", href: ROUTES.ADMIN_REPORTS },
@@ -101,7 +101,11 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
                     key={item.href}
                     to={item.href}
                     className={`${
-                      bg ? "text-gray-800" : "text-white"
+                      bg
+                        ? "text-gray-800"
+                        : isAuthenticated
+                        ? "text-gray-800"
+                        : "text-white"
                     } text-[16px] hover:text-blue transition-colors duration-200 font-medium`}
                   >
                     {item.label}
@@ -115,7 +119,15 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
           {/* Auth Section */}
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
-              <div className={`flex items-center space-x-3 ${bg ? "text-gray-800" : "text-white"} `}>
+              <div
+                className={`flex items-center space-x-3 ${
+                  bg
+                    ? "text-gray-800"
+                    : isAuthenticated
+                    ? "text-gray-800"
+                    : "text-white"
+                } `}
+              >
                 <div className="flex items-center space-x-2">
                   <User className="w-5 h-5" />
                   <span className="text-gray-">{user?.name}</span>
@@ -163,14 +175,14 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-gray-200 py-4"
+            className="md:hidden w-full backdrop-blur-md shadow-2xl bg-white border-t border-gray-200 p-4"
           >
             <div className="flex flex-col space-y-3">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   to={item.href}
-                  className="text-white hover:text-[#007bff] transition-colors duration-200 font-medium"
+                  className="text-gray-800 hover:text-[#007bff] transition-colors duration-200 font-medium"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.label}
@@ -179,8 +191,8 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
               {isAuthenticated ? (
                 <div className="pt-3 border-t border-gray-200">
                   <div className="flex items-center space-x-2 mb-3">
-                    <User className="w-5 h-5 text-gray-500" />
-                    <span className="text-white">{user?.name}</span>
+                    <User className="w-5 h-5 text-gray-800" />
+                    <span className="text-gray-800">{user?.name}</span>
                   </div>
                   <Button
                     variant="outline"

@@ -12,7 +12,13 @@ const applicationSchema = z
     name: z.string().min(2, "Name must be at least 2 characters"),
     email: z.string().email("Please enter a valid email address"),
     phone: z.string().nonempty("number is required"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .regex(
+        /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        "Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number"
+      ),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {

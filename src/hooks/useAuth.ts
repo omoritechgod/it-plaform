@@ -11,12 +11,12 @@ export const useAuth = () => {
       if (token) {
         setLoading(true);
         try {
-          const response = await authService.getCurrentUser();
-          if (response.status === true && response.data) {
-            setUser(response.data);
-          } else {
-            localStorage.removeItem('auth_token');
-          }
+          // const response = await authService.getCurrentUser();
+          // if (response.status === true && response.data) {
+          //   setUser(response.data);
+          // } else {
+          //   localStorage.removeItem('auth_token');
+          // }
         } catch (error) {
           console.error('Failed to get current user:', error);
           localStorage.removeItem('auth_token');

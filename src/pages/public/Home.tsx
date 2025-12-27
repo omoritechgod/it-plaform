@@ -87,7 +87,7 @@ export const Home: React.FC = () => {
         "Receive stipends and rewards for your contributions and achievements.",
     },
   ];
-  const [rate, setRate] = useState({});
+  const [rate, setRate] = useState<{ [key: number]: number }>({});
   const ref = useRef(null);
   const [count, setCount] = useState<number>(0);
 
@@ -136,14 +136,14 @@ export const Home: React.FC = () => {
         <div className="w-full h-full bg-black/80 hero-raduis backdrop-saturate-100 z-30 absolute left-0 right-0"></div>
         <div className="w-full h-full z-40 absolute hero-raduis left-0 right-0 px-5 md:px-10 lg:px-20">
           <div className="w-full h-full flex items-center pt-[5%] leading-10 justify-center flex-col gap-4">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
+            <h1 className="text-4xl flex items-center justify-center gap-2 flex-wrap sm:text-5xl md:text-6xl font-extrabold leading-tight">
               {["Launch", " Your ", "Tech ", "Career"].map((word, index) => (
                 <motion.span
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.3 }}
-                  className="text transition-colors duration-500"
+                  className=" transition-colors duration-500"
                   style={{
                     color: index === count ? "#0077C0" : "#FAFAFA",
                   }}
@@ -152,7 +152,7 @@ export const Home: React.FC = () => {
                 </motion.span>
               ))}
             </h1>
-            <p className="text-base sm:text-lg md:text-xl max-w-2xl md:text-center text-gray-400 font-normal">
+            <p className="text-base sm:text-lg md:text-xl max-w-2xl text-center text-gray-400 font-normal">
               Join our comprehensive internship program and transform from a
               beginner to a skilled professional ready for the tech industry.
             </p>
@@ -198,11 +198,11 @@ export const Home: React.FC = () => {
       <section className="md:max-w-5xl w-[95%] flex flex-col md:flex-row items-start justify-between py-20 gap-12  mx-auto">
         <div className="md:w-1/2">
           <h2 className="mb-6 text-dark_blue text-3xl md:text-4xl">
-            Internships should be more than checklists — they should be journeys
+            Internships should be more than checklists they should be journeys
             of growth.
           </h2>
           <p className="text-lg text-gray-600 leading-relaxed">
-            We believe internships should be more than tasks — they should be
+            We believe internships should be more than tasks they should be
             journeys of discovery and growth. Our platform connects interns with
             real-world projects, mentors, and learning paths that help them gain
             hands-on experience while developing practical skills. Whether
@@ -364,10 +364,10 @@ export const Home: React.FC = () => {
                   className="min-w-[300px] shadow-none max-h-80 p-4"
                 >
                   <div className="w-full h-full flex gap-2 flex-col text-center items-center">
-                    <div className="relative">
-                      <Quote className="absolute left-0 -top-3 w-4 h-4 text-gray-500 transform  scale-x-[-1]" />
+                    <div className="relative flex flex-col items-center gap-2">
+                      <Quote className="w-4 h-4 text-gray-500 transform  scale-x-[-1]" />
                       <p className="text-gray-500 text-xs">{item.compliment}</p>
-                      <Quote className="absolute right-0 -top-3 w-4 h-4 text-gray-500" />
+                      {/* <Quote className="absolute right-0 -top-3 w-4 h-4 text-gray-500" /> */}
                     </div>{" "}
                     <div className="flex gap-2 items-center">
                       <img
@@ -401,10 +401,10 @@ export const Home: React.FC = () => {
                   className="min-w-[300px] shadow-none max-h-80 p-4"
                 >
                   <div className="w-full h-full flex gap-4 flex-col text-center items-center">
-                    <div className="relative">
-                      <Quote className="absolute left-0 -top-3 w-4 h-4 text-gray-500 transform  scale-x-[-1]" />
+                    <div className="relative flex flex-col items-center gap-2">
+                      <Quote className="w-4 h-4 text-gray-500 transform  scale-x-[-1]" />
                       <p className="text-gray-500 text-xs">{item.compliment}</p>
-                      <Quote className="absolute right-0 -top-3 w-4 h-4 text-gray-500" />
+                      {/* <Quote className="absolute right-0 -top-3 w-4 h-4 text-gray-500" /> */}
                     </div>
 
                     <div className="flex gap-3 items-center">
@@ -439,11 +439,11 @@ export const Home: React.FC = () => {
                   className="min-w-[300px] shadow-none max-h-80 p-4"
                 >
                   <div className="w-full h-full flex gap-2 flex-col text-center items-center">
-                    <div className="relative">
-                      <Quote className="absolute left-0 -top-3 w-4 h-4 text-gray-500 transform  scale-x-[-1]" />
+                    <div className="relative flex flex-col items-center gap-2">
+                      <Quote className="w-4 h-4 text-gray-500 transform  scale-x-[-1]" />
                       <p className="text-gray-500 text-xs">{item.compliment}</p>
-                      <Quote className="absolute right-0 -top-3 w-4 h-4 text-gray-500" />
-                    </div>{" "}
+                      {/* <Quote className="absolute right-0 -top-3 w-4 h-4 text-gray-500" /> */}
+                    </div>
                     <div className="flex gap-2 items-center">
                       <img
                         src={item.image}
@@ -474,7 +474,7 @@ export const Home: React.FC = () => {
       </section>
       {/* line */}
       <div className="md:max-w-5xl w-[95%] block mx-auto py-16 border-t-2 border-gray-100 border-b-2"></div>
-     
+
       {/* CTA Section */}
       <CTA />
     </div>

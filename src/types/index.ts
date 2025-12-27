@@ -35,6 +35,20 @@ export interface Cohort {
   created_at: string;
 }
 
+export interface TrainingModule {
+  title: string;
+  slug: string;
+  description: string;
+  skill_tag: string;
+  level: "beginner" | "intermediate" | "advanced";
+  order: number;
+  resources: {
+    video: string;
+    pdf: string;
+  };
+  status: "active" | "inactive";
+}
+
 export interface SkillTest {
   id: string;
   title: string;

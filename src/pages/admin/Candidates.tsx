@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Filter, Mail, Download, Trash2, CheckCircle, XCircle, Eye, Users } from 'lucide-react';
 import { Button } from '../../components/common/Button';
 import { Card } from '../../components/common/Card';
 import { Input } from '../../components/common/Input';
+import AdminService from '../../services/admin.service';
 
-interface Candidate {
+
+export interface Candidate {
   id: string;
   name: string;
   email: string;
@@ -24,40 +26,23 @@ export const Candidates: React.FC = () => {
   const [showBulkEmailModal, setShowBulkEmailModal] = useState(false);
 
   // Mock data
-  const [candidates, setCandidates] = useState<Candidate[]>([
-    {
-      id: '1',
-      name: 'John Doe',
-      email: 'john@example.com',
-      skills: ['React', 'JavaScript', 'Node.js'],
-      stage: 'skill_test',
-      applied_at: '2025-01-15',
-      test_score: 85,
-      status: 'pending',
-      cohort: 'Frontend Development 2025',
-    },
-    {
-      id: '2',
-      name: 'Sarah Wilson',
-      email: 'sarah@example.com',
-      skills: ['UI/UX Design', 'Figma', 'Adobe XD'],
-      stage: 'interview',
-      applied_at: '2025-01-14',
-      test_score: 92,
-      status: 'approved',
-      cohort: 'UI/UX Design 2025',
-    },
-    {
-      id: '3',
-      name: 'Mike Johnson',
-      email: 'mike@example.com',
-      skills: ['Python', 'Django', 'PostgreSQL'],
-      stage: 'application',
-      applied_at: '2025-01-13',
-      status: 'pending',
-      cohort: 'Backend Development 2025',
-    },
-  ]);
+const [candidates, setCandidates] = useState<Candidate[]>([]);
+
+
+  useEffect(() => {
+    const fetchCandidates = async () => {
+      try {
+        const response = await AdminService.getCandidates();
+        if (response.status) {
+          setCandidates(response.data); // assuming your API returns candidates under data
+        }
+      } catch (error) {
+        console.error('Failed to fetch candidates:', error);
+      }
+    };
+
+    fetchCandidates();
+  }, []);
 
   const stages = [
     { value: 'all', label: 'All Stages' },
@@ -173,14 +158,14 @@ export const Candidates: React.FC = () => {
   );
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 mt-28">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Candidate Management</h1>
           <p className="text-gray-600 mt-2">Review and manage intern applications</p>
         </div>
-        <div className="flex space-x-3">
+        <div className="flex items-center space-x-3">
           <Button variant="outline">
             <Download className="w-4 h-4 mr-2" />
             Export CSV
