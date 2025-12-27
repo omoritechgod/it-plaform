@@ -144,7 +144,7 @@ class AdminService {
     return api.post("/api/training/modules", data);
   }
 
-  async getTrainingModule(): Promise<ApiResponse<TrainingModule>> {
+  async getTrainingModule(): Promise<ApiResponse<TrainingModule[]>> {
     return api.get("/api/training/modules");
   }
 

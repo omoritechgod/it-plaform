@@ -109,7 +109,6 @@ const TrainingModulePage: React.FC = () => {
   return (
     <div className="min-h-screen mt-28 bg-gray-50 p-4 md:p-8 font-sans text-gray-900">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* --- LEFT: FORM SECTION (Sticky) --- */}
         <div className="lg:col-span-4">
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-8">
             <div className="flex items-center gap-2 mb-6">
@@ -272,13 +271,13 @@ const TrainingModulePage: React.FC = () => {
         </div>
 
         {/* --- RIGHT: LIST SECTION --- */}
-        <div className="lg:col-span-8">
+        <div className="lg:col-span-8 md:overflow-y-auto">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-extrabold text-gray-800">
               Training Catalog
             </h2>
             <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
-              {modules.length} Modules
+              {modules?.length} Modules
             </span>
           </div>
 
@@ -290,7 +289,7 @@ const TrainingModulePage: React.FC = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {modules.map((m: trainingModuleData) => (
+              {modules?.map((m: trainingModuleData) => (
                 <div
                   key={m.slug}
                   className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow group"
