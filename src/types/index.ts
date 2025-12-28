@@ -8,14 +8,24 @@ export interface User {
   updated_at: string;
 }
 
-export interface Intern extends User {
+export interface Intern {
+  user: User;
   stage: string;
   skills: string[];
   wallet_balance: number;
   cohort_id?: string;
+  progress_summary: {
+    completed_modules: number;
+    notes: string;
+  };
+  current_stage: number;
+  status: "pending" | "approved" | "rejected";
+  cohort: Cohort;
+  current_skill_level: number;
   agreement_signed: boolean;
   test_attempts: number;
   training_progress: number;
+  unlocked_modules: string[];
 }
 
 export interface Admin extends User {

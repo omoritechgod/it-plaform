@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 type HeaderProps ={
     title: string,
@@ -11,11 +10,9 @@ const Title = ({title, description}: HeaderProps) => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
       viewport={{ once: true }}
-      className="max-w-2xl w-[95%] flex justify-start items-start flex-col"
+      className="text-center md:text-left "
     >
-      <div className="mb-2">
-        <h2 className="text-4xl tracking-tighter text-dark_blue">{title}</h2>
-      </div>
+        <h2 className="text-4xl mb-2 tracking-tighter  text-dark_blue">{title}</h2>
       <p className="text-lg text-gray-600">
         {description}
       </p>
