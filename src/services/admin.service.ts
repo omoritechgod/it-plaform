@@ -8,6 +8,7 @@ import {
   WithdrawalRequest,
   Transaction,
   TrainingModule,
+  Intern,
 } from "../types";
 import { Candidate } from "../pages/admin/Candidates";
 import { trainingModuleData } from "../pages/admin/TrainingModule";
@@ -78,8 +79,8 @@ class AdminService {
   }
 
   // Candidate Management
-  async getCandidates(filters?: any): Promise<ApiResponse<Candidate[]>> {
-    return api.get("/admin/candidates", { params: filters });
+  async getCandidates(): Promise<ApiResponse<Intern[]>> {
+    return api.get("/api/intern/profile");
   }
 
   async approveCandidate(id: string): Promise<ApiResponse> {
