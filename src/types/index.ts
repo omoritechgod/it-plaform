@@ -8,16 +8,43 @@ export interface User {
   updated_at: string;
 }
 
-export interface Intern extends User {
+export interface Intern {
+  user: User;
   stage: string;
   skills: string[];
   wallet_balance: number;
   cohort_id?: string;
+  progress_summary: {
+    completed_modules: number;
+    notes: string;
+  };
+  current_stage: number;
+  status: "pending" | "approved" | "rejected";
+  cohort: Cohort;
+  current_skill_level: number;
   agreement_signed: boolean;
   test_attempts: number;
   training_progress: number;
+  unlocked_modules: string[];
 }
 
+export interface Candidate {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+
+  bio?: string | null;
+  profilePhotoUrl?: string | null;
+  resumeUrl?: string | null;
+
+  skills: string;
+  status: "pending" | "approved" | "rejected";
+
+  emailVerifiedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
 export interface Admin extends User {
   permissions: string[];
   wallet_access: boolean;
@@ -36,6 +63,7 @@ export interface Cohort {
 }
 
 export interface TrainingModule {
+  id: string | number;
   title: string;
   slug: string;
   description: string;
@@ -68,6 +96,17 @@ export interface Question {
   correct_answer: string;
   image_url?: string;
 }
+
+export interface Lesson {
+  id?: number;
+  module_id?: number;
+  title: string;
+  content: string;
+  videoUrl?: string;
+  order: number;
+  duration_minutes: number;
+}
+
 
 export interface Project {
   id: string;

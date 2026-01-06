@@ -1,4 +1,3 @@
-import React from "react";
 import { ROUTES } from "../../config/constants";
 import { Link } from "react-router-dom";
 import BtnTransparent from "../ui/BtnTransparent";
@@ -7,23 +6,39 @@ import group_img from "../../assets/group.jpeg";
 const CTA = () => {
   return (
     <section
-      className="w-full min-h-64 flex relative items-center justify-center"
+      className="relative w-full min-h-[70vh] flex items-center justify-center overflow-hidden"
       style={{
         backgroundImage: `url(${group_img})`,
         backgroundPosition: "center",
         backgroundSize: "cover",
       }}
     >
-      <div className="w-full h-full absolute left-0 bottom-0 bg-gradient-to-r from-[#0f266c85] via-[#0077C0] to-[#c7eeff75]"></div>
-      <div className="max-w-4xl p-24 sm:px-8 w-full md:w-[80%] gap-2 text-white flex items-center leading-9 justify-center flex-col text-center z-30">
-        <h1 className="text-5xl">Launch Your Career with Real Experience.</h1>
-        <p className="text-lg">
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0b1d4a]/90 via-[#0b3a66]/80 to-[#0f5b8f]/70"></div>
+
+      {/* Soft Glow */}
+      <div className="absolute -inset-32 bg-blue-500/20 blur-3xl opacity-40"></div>
+
+      {/* Content */}
+      <div className="relative z-10 max-w-3xl px-6 md:px-12 text-center text-white">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+          Launch Your Career with
+          <span className="block text-blue-300">Real Experience</span>
+        </h1>
+
+        <p className="mt-6 text-base md:text-lg text-white/80 leading-relaxed">
           Join hundreds of interns who’ve transformed their skills into
-          impactful careers through <br></br> our guided program.
+          impactful careers through our guided internship program.
         </p>
-        <Link className="mt-4" to={ROUTES.APPLY}>
-          <BtnTransparent>Apply Now</BtnTransparent>
-        </Link>
+
+        {/* CTA */}
+        <div className="mt-10 flex justify-center">
+          <Link to={ROUTES.APPLY}>
+            <BtnTransparent className="px-10 py-4 text-lg font-semibold rounded-full backdrop-blur-md bg-white/10 hover:bg-white/20 transition">
+              Apply Now
+            </BtnTransparent>
+          </Link>
+        </div>
       </div>
     </section>
   );

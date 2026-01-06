@@ -1,5 +1,14 @@
-import React from "react";
-import { PlusCircle, Video, FileText, Tag, Loader2 } from "lucide-react";
+import React, { useState } from "react";
+import {
+  PlusCircle,
+  Video,
+  FileText,
+  Tag,
+  Loader2,
+  Trash2,
+  Pencil,
+  MessageCircleMore,
+} from "lucide-react";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,6 +17,9 @@ import adminService from "../../services/admin.service";
 import { toast } from "react-toastify";
 import { Button } from "../../components/common/Button";
 import ErrorComponent from "../../components/ErrorComponent";
+import { TrainingModule } from "../../types";
+import EditModuleModal from "../../components/admin/ModuleModal";
+import LessonModal from "../../components/admin/Lesson";
 
 const trainingModuleSchema = z.object({
   title: z
@@ -42,6 +54,13 @@ const trainingModuleSchema = z.object({
 export type trainingModuleData = z.infer<typeof trainingModuleSchema>;
 
 const TrainingModulePage: React.FC = () => {
+  const [edit, setEdit] = useState<boolean>(false);
+  const [selectedModule, setSelectedModule] = useState<TrainingModule | null>(
+    null
+  );
+  const [openLesson, setOpenLesson] = useState<number | null>(null);
+  // const [selectdLesson, setSelectdLesson] = useState<null>(null);
+
   const {
     handleSubmit,
     formState: { errors },
@@ -105,6 +124,22 @@ const TrainingModulePage: React.FC = () => {
   if (isError) {
     return <ErrorComponent error={error.message} refetch={refetch} />;
   }
+
+  const handleEditModule = (module: TrainingModule) => {
+    setSelectedModule(module);
+    setEdit(true);
+  };
+
+  const handleDeleteModule = async (id: string | number) => {
+    console.log("Delete:", id);
+    //  try {
+    //       await adminService;
+    //       queryClient.invalidateQueries({ queryKey: ["module"] });
+    //       toast.success("Module deleted Successfully");
+    //     } catch (err) {
+    //       toast.error("Failed to delete Module");
+    //     }
+  };
 
   return (
     <div className="min-h-screen mt-28 bg-gray-50 p-4 md:p-8 font-sans text-gray-900">
@@ -284,83 +319,138 @@ const TrainingModulePage: React.FC = () => {
           {isLoading ? (
             <div className="animate-pulse flex flex-col gap-4">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="h-32 bg-gray-200 rounded-2xl" />
+                <div key={i} className="h-32 bg-gray-200 rounded-2xl"></div>
               ))}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {modules?.map((m: trainingModuleData) => (
+              {modules?.map((m: TrainingModule, index) => (
                 <div
                   key={m.slug}
-                  className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow group"
+                  className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
                 >
-                  <div className="flex justify-between items-start mb-4">
+                  <div className="relative group">
+                    {/* Action Buttons */}
                     <div
-                      className={`px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider ${
-                        m.level === "beginner"
-                          ? "bg-green-100 text-green-700"
-                          : m.level === "intermediate"
-                          ? "bg-orange-100 text-orange-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
+                      className={`absolute top-4 right-4 flex gap-2 bg-white/50 backdrop-blur rounded-3xl ${
+                        openLesson ? "opacity-100" : "opacity-0"
+                      } group-hover:opacity-100 transition`}
                     >
-                      {m.level}
-                    </div>
-                    <span className="text-gray-400 font-mono text-sm">
-                      #{m.order}
-                    </span>
-                  </div>
+                      <button
+                        onClick={() => handleEditModule(m)}
+                        className="p-1.5 rounded-full text-gray-400 hover:text-green-500  hover:bg-green-100  transition"
+                        title="Edit module"
+                      >
+                        <Pencil size={15} />
+                      </button>
 
-                  <h3 className="text-lg font-bold group-hover:text-blue-600 transition-colors mb-2">
-                    {m.title}
-                  </h3>
-                  <p className="text-gray-500 text-sm line-clamp-2 mb-4">
-                    {m.description}
-                  </p>
+                      <button
+                        onClick={() =>
+                          setOpenLesson((p) => (p === index ? null : index))
+                        }
+                        className="p-1.5 rounded-full text-gray-400 hover:text-indigo-500  hover:bg-indigo-100  transition"
+                        title="Edit module"
+                      >
+                        <MessageCircleMore size={18} />
+                      </button>
 
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="flex items-center gap-1 text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded">
-                      <Tag size={12} /> {m.skill_tag}
+                      <button
+                        onClick={() => handleDeleteModule(m.id)}
+                        className="p-1.5 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-100 transition"
+                        title="Delete module"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
+
+                    <div className="flex justify-start flex-col-reverse gap-1 items-start mb-4">
+                      <div
+                        className={`px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider ${
+                          m.level === "beginner"
+                            ? "bg-green-100 text-green-700"
+                            : m.level === "intermediate"
+                            ? "bg-orange-100 text-orange-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {m.level}
+                      </div>
+                      <span className="text-gray-400 font-mono text-sm">
+                        #{m.order}
+                      </span>
+                    </div>
+
+                    <h3 className="text-lg font-bold group-hover:text-blue-600 transition-colors mb-2">
+                      {m.title}
+                    </h3>
+
+                    <p className="text-gray-500 text-sm line-clamp-2 mb-4">
+                      {m.description}
+                    </p>
+
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="flex items-center gap-1 text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                        <Tag size={12} /> {m.skill_tag}
+                      </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-gray-50 flex justify-between items-center">
+                      <div className="flex gap-4">
+                        {m.resources?.video && (
+                          <a
+                            href={m.resources.video}
+                            className="text-blue-500 hover:text-blue-700 transition"
+                            title="Watch Video"
+                          >
+                            <Video size={20} />
+                          </a>
+                        )}
+                        {m.resources?.pdf && (
+                          <a
+                            href={m.resources.pdf}
+                            className="text-red-500 hover:text-red-700 transition"
+                            title="Download PDF"
+                          >
+                            <FileText size={20} />
+                          </a>
+                        )}
+                      </div>
+
+                      <span
+                        className={`text-xs font-bold ${
+                          m.status === "active"
+                            ? "text-green-500"
+                            : "text-gray-400"
+                        }`}
+                      >
+                        {m.status.toUpperCase()}
+                      </span>
                     </div>
                   </div>
-
-                  <div className="pt-4 border-t border-gray-50 flex justify-between items-center">
-                    <div className="flex gap-4">
-                      {m.resources?.video && (
-                        <a
-                          href={m.resources.video}
-                          className="text-blue-500 hover:text-blue-700 transition"
-                          title="Watch Video"
-                        >
-                          <Video size={20} />
-                        </a>
-                      )}
-                      {m.resources?.pdf && (
-                        <a
-                          href={m.resources.pdf}
-                          className="text-red-500 hover:text-red-700 transition"
-                          title="Download PDF"
-                        >
-                          <FileText size={20} />
-                        </a>
-                      )}
-                    </div>
-                    <span
-                      className={`text-xs font-bold ${
-                        m.status === "active"
-                          ? "text-green-500"
-                          : "text-gray-400"
-                      }`}
-                    >
-                      {m.status.toUpperCase()}
-                    </span>
-                  </div>
+                  {openLesson === index && <LessonModal moduleId={m.id} />}
                 </div>
               ))}
             </div>
           )}
         </div>
       </div>
+      {edit && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setEdit(false)}
+          />
+
+          {/* Modal */}
+          <div className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto">
+            <EditModuleModal
+              module={selectedModule}
+              onClose={() => setEdit(false)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
