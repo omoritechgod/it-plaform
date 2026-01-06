@@ -28,6 +28,23 @@ export interface Intern {
   unlocked_modules: string[];
 }
 
+export interface Candidate {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+
+  bio?: string | null;
+  profilePhotoUrl?: string | null;
+  resumeUrl?: string | null;
+
+  skills: string;
+  status: "pending" | "approved" | "rejected";
+
+  emailVerifiedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
 export interface Admin extends User {
   permissions: string[];
   wallet_access: boolean;
@@ -46,6 +63,7 @@ export interface Cohort {
 }
 
 export interface TrainingModule {
+  id: string | number;
   title: string;
   slug: string;
   description: string;
@@ -78,6 +96,17 @@ export interface Question {
   correct_answer: string;
   image_url?: string;
 }
+
+export interface Lesson {
+  id?: number;
+  module_id?: number;
+  title: string;
+  content: string;
+  videoUrl?: string;
+  order: number;
+  duration_minutes: number;
+}
+
 
 export interface Project {
   id: string;
