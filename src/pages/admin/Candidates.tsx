@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Search,
   Filter,
   Mail,
   Download,
-  Trash2,
   CheckCircle,
   XCircle,
   Eye,
@@ -17,22 +16,9 @@ import { Card } from "../../components/common/Card";
 import { Input } from "../../components/common/Input";
 import { useQuery } from "@tanstack/react-query";
 import adminService from "../../services/admin.service";
-import { Intern } from "../../types";
+import { Candidate } from "../../types";
 import ErrorComponent from "../../components/ErrorComponent";
-import { fi } from "zod/v4/locales";
 import InternProgressCard from "../../components/CandidateCard";
-
-export interface Candidate {
-  id: string;
-  name: string;
-  email: string;
-  skills: string[];
-  stage: string;
-  applied_at: string;
-  test_score?: number;
-  status: "pending" | "approved" | "rejected";
-  cohort?: string;
-}
 
 export const Candidates: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -82,13 +68,13 @@ export const Candidates: React.FC = () => {
     { value: "training", label: "Training" },
   ];
 
-  const filteredCandidates = candidates?.filter((candidate: Intern) => {
+  const filteredCandidates = candidates?.filter((candidate: Candidate) => {
     const matchesSearch =
-      candidate?.user?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      candidate?.user?.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStage =
-      selectedStage === "all" || candidate.stage === selectedStage;
-    return matchesSearch && matchesStage;
+      candidate?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      candidate?.email.toLowerCase().includes(searchTerm.toLowerCase());
+    // const matchesStage =
+    //   selectedStage === "all" || candidate.stage === selectedStage;
+    return matchesSearch;
   });
 
   const handleSelectCandidate = (candidateId: string) => {
@@ -104,7 +90,7 @@ export const Candidates: React.FC = () => {
       setSelectedCandidates([]);
     } else {
       setSelectedCandidates(
-        filteredCandidates?.map((c: Intern) => c.user.id) ?? []
+        filteredCandidates?.map((c: Candidate) => String(c.id)) ?? []
       );
     }
   };
@@ -242,7 +228,7 @@ export const Candidates: React.FC = () => {
               <p className="text-sm text-gray-600">Pending Review</p>
               <p className="text-2xl font-bold text-gray-900">
                 {
-                  candidates?.filter((c: Intern) => c.status === "pending")
+                  candidates?.filter((c: Candidate) => c.status === "pending")
                     .length
                 }
               </p>
@@ -321,22 +307,37 @@ export const Candidates: React.FC = () => {
             onChange={handleSelectAll}
             className="rounded border-gray-300 text-blue-600"
           />
-          <table className="w-full text-sm text-left text-white">
+          <table className="w-full bg-blue rounded-md text-sm text-left text-white">
             {/* Header */}
-            <thead className="text-xs uppercase text-white/60 border-b border-white/10 bg-white/5">
+            <thead className=" text-white/60 border-b border-gray-400 ">
               <tr>
-                <th className="px-6 py-4">Intern</th>
-                <th className="px-6 py-4">Cohort</th>
-                <th className="px-6 py-4">Stage</th>
-                <th className="px-6 py-4">Skills</th>
-                <th className="px-6 py-4">Progress</th>
-                <th className="px-6 py-4">Status</th>
+                {/* User */}
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
+                  Intern
+                </th>
+
+                {/* Skills */}
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
+                  Skills
+                </th>
+
+                {/* Status */}
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
+                  Status
+                </th>
+
+                {/* Meta */}
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
+                  Meta
+                </th>
               </tr>
             </thead>
+            <tbody>
+              {filteredCandidates?.map((data, index) => (
+                <InternProgressCard data={data} index={index} />
+              ))}
+            </tbody>
           </table>
-          {filteredCandidates?.map((data, index) => (
-            <InternProgressCard data={data} index={index} />
-          ))}
         </div>
       </Card>
 

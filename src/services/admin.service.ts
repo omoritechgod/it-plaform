@@ -9,8 +9,9 @@ import {
   Transaction,
   TrainingModule,
   Intern,
+  Lesson,
+  Candidate,
 } from "../types";
-import { Candidate } from "../pages/admin/Candidates";
 import { trainingModuleData } from "../pages/admin/TrainingModule";
 
 export interface CohortData {
@@ -79,8 +80,8 @@ class AdminService {
   }
 
   // Candidate Management
-  async getCandidates(): Promise<ApiResponse<Intern[]>> {
-    return api.get("/api/intern/profile");
+  async getCandidates(): Promise<ApiResponse<Candidate[]>> {
+    return api.get("/api/all-interns");
   }
 
   async approveCandidate(id: string): Promise<ApiResponse> {
@@ -148,6 +149,29 @@ class AdminService {
   async getTrainingModule(): Promise<ApiResponse<TrainingModule[]>> {
     return api.get("/api/training/modules");
   }
+
+  async updateTrainingModule(
+    data: TrainingModule
+  ): Promise<ApiResponse<TrainingModule>> {
+    return api.put(`/api/training/modules/${data.id}`, data);
+  }
+
+  async updateLessonModule(
+    data: Lesson,id:number | string | undefined
+  ): Promise<ApiResponse<TrainingModule>> {
+    return api.put(`/api/lessons/${id}`, data);
+  }
+
+  async getLessonModule(): Promise<ApiResponse<Lesson[]>> {
+    return api.get(`/api/lessons`);
+  }
+
+  async createLessonModule(
+    data: Lesson, moduleId: string | number
+  ): Promise<ApiResponse> {
+    return api.post(`/api/module/${moduleId}/lessons`, data);
+  }
+
 
   // Project Management
   async getProjects(): Promise<ApiResponse<Project[]>> {

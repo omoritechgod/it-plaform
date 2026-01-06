@@ -44,7 +44,7 @@ export const Cohorts: React.FC = () => {
   // Fetch cohorts from API
 
   const {
-    data: cohorts,
+    data: cohorts = [],
     isLoading,
     isError,
     error,
@@ -52,13 +52,7 @@ export const Cohorts: React.FC = () => {
   } = useQuery({
     queryKey: ["cohorts"],
     queryFn: async () => {
-      const token = localStorage.getItem("auth_token");
-
-      const res = await api.get("/api/cohorts", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await api.get("/api/cohorts");
       console.log("Cohorts loaded:", res);
       return res.data;
     },
@@ -171,7 +165,7 @@ export const Cohorts: React.FC = () => {
             <div>
               <p className="text-sm text-gray-600">Total Cohorts</p>
               <p className="text-2xl font-bold text-gray-900">
-                {cohorts.length}
+                {cohorts?.length}
               </p>
             </div>
             <Users className="w-8 h-8 text-blue-600" />
@@ -183,7 +177,7 @@ export const Cohorts: React.FC = () => {
               <p className="text-sm text-gray-600">Active Cohorts</p>
               <p className="text-2xl font-bold text-gray-900">
                 {
-                  cohorts.filter((c: { is_accepting: any }) => c.is_accepting)
+                  cohorts?.filter((c: { is_accepting: any }) => c.is_accepting)
                     .length
                 }
               </p>
@@ -196,7 +190,7 @@ export const Cohorts: React.FC = () => {
             <div>
               <p className="text-sm text-gray-600">Total Interns</p>
               <p className="text-2xl font-bold text-gray-900">
-                {cohorts.reduce(
+                {cohorts?.reduce(
                   (sum: any, c: { current_interns: any }) =>
                     sum + c.current_interns,
                   0
@@ -225,7 +219,7 @@ export const Cohorts: React.FC = () => {
             <div>
               <p className="text-sm text-gray-600">Available Slots</p>
               <p className="text-2xl font-bold text-gray-900">
-                {cohorts.reduce(
+                {cohorts?.reduce(
                   (sum: number, c: { max_slot: number }) => sum + c.max_slot,
                   0
                 )}
@@ -238,7 +232,7 @@ export const Cohorts: React.FC = () => {
 
       {/* Cohorts List */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {cohorts.map((cohort: Cohort, index: number) => (
+        {cohorts?.map((cohort: Cohort, index: number) => (
           <motion.div
             key={cohort.id}
             initial={{ opacity: 0, y: 20 }}

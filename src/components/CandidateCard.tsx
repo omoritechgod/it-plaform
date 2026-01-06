@@ -1,89 +1,123 @@
-import { Calendar, Wallet, Layers } from "lucide-react";
+import { Calendar, Wallet, Check, X } from "lucide-react";
 import { motion } from "framer-motion";
-import { Intern } from "../types";
+import { Candidate } from "../types";
 
 export default function InternProgressCard({
   data,
   index,
 }: {
-  data: Intern;
+  data: Candidate;
   index: number;
 }) {
-  const total = 6; // example total modules
-  const completed = data.progress_summary.completed_modules;
-  const progress = (completed / total) * 100;
+  const normalizeSkills = (skills: string | string[] | null): string[] => {
+    if (!skills) return [];
+    if (Array.isArray(skills)) return skills;
+
+    try {
+      return JSON.parse(skills);
+    } catch {
+      return [];
+    }
+  };
+
+  // 🔁 handlers (plug into mutation later)
+  const handleApprove = () => {
+    console.log("Approve user", data.id);
+  };
+
+  const handleReject = () => {
+    console.log("Reject user", data.id);
+  };
+
   return (
     <motion.tr
-      key={data.user.id}
+      key={data.id}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
       className="border-b border-white/5 hover:bg-white/5 transition"
     >
-      {/* Intern */}
+      {/* User Info */}
       <td className="px-6 py-4">
-        <div className="font-semibold">{data.user.name}</div>
-        <div className="text-xs text-white/50">{data.user.email}</div>
-      </td>
-
-      {/* Cohort */}
-      <td className="px-6 py-4 text-white/70 flex items-center gap-2">
-        <Layers className="w-4 h-4 text-sky-400" />
-        {data.cohort.name}
-      </td>
-
-      {/* Stage */}
-      <td className="px-6 py-4">
-        <span className="px-3 py-1 text-xs rounded-full bg-sky-500/15 text-sky-300 capitalize">
-          {data.current_stage}
-        </span>
+        <div className="font-semibold">{data.name}</div>
+        <div className="text-xs text-white/50">{data.email}</div>
       </td>
 
       {/* Skills */}
       <td className="px-6 py-4">
-        <div className="flex flex-wrap gap-1">
-          {data.skills.map((skill) => (
-            <span
-              key={skill}
-              className="px-2 py-1 text-xs rounded bg-white/10 text-white/80"
-            >
-              {skill}
+        <div className="max-w-48 flex flex-wrap gap-1">
+          {normalizeSkills(data.skills).length > 0 ? (
+            normalizeSkills(data.skills).map((skill) => (
+              <span
+                key={skill}
+                className="px-2 py-1 text-xs rounded bg-white/10 text-white/80"
+              >
+                {skill}
+              </span>
+            ))
+          ) : (
+            <span className="text-xs text-white/40 italic">
+              No skills added
             </span>
-          ))}
+          )}
         </div>
       </td>
 
-      {/* Progress */}
-      <td className="px-6 py-4 min-w-[160px]">
-        <div className="flex justify-between text-xs mb-1 text-white/60">
-          <span>
-            {completed}/{total}
+      {/* Status + Actions */}
+      <td className="px-6 flex flex-col-reverse py-4">
+        <div className="flex items-center gap-3">
+          <span
+            className={`px-3 py-1 text-xs rounded-full capitalize font-medium
+              ${
+                data.status === "approved"
+                  ? "bg-emerald-500/15 text-emerald-400"
+                  : data.status === "pending"
+                  ? "bg-yellow-500/15 text-yellow-400"
+                  : "bg-red-500/15 text-red-400"
+              }
+            `}
+          >
+            {data.status}
           </span>
-          <span>{Math.round(progress)}%</span>
+
+          {/* Actions (only if pending) */}
+          {data.status === "pending" && (
+            <div className="flex gap-1">
+              <button
+                onClick={handleApprove}
+                className="p-1.5 rounded-full bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition"
+                title="Approve"
+              >
+                <Check size={14} />
+              </button>
+
+              <button
+                onClick={handleReject}
+                className="p-1.5 rounded-full bg-red-500/10 text-red-400 hover:bg-red-500/20 transition"
+                title="Reject"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          )}
         </div>
-        <div className="h-2 rounded-full bg-white/10 overflow-hidden">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="h-full bg-emerald-400"
-          />
-        </div>
-        <p className="mt-1 text-[11px] italic text-white/40">
-          {data.progress_summary.notes}
-        </p>
       </td>
 
-      {/* Status */}
+      {/* Meta */}
       <td className="px-6 py-4">
         <div className="flex flex-col gap-1 text-xs text-white/60">
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4" />
-            Agreement
+            Joined {new Date(data.createdAt).toLocaleDateString()}
           </div>
-          <div className="flex items-center gap-2 text-emerald-400">
+
+          <div
+            className={`flex items-center gap-2 ${
+              data.emailVerifiedAt ? "text-emerald-400" : "text-white/40"
+            }`}
+          >
             <Wallet className="w-4 h-4" />
-            Wallet Active
+            {data.emailVerifiedAt ? "Email Verified" : "Email Not Verified"}
           </div>
         </div>
       </td>
