@@ -48,6 +48,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
           { label: "Projects", href: ROUTES.ADMIN_PROJECTS },
           { label: "Wallets", href: ROUTES.ADMIN_WALLETS },
           { label: "Reports", href: ROUTES.ADMIN_REPORTS },
+          { label: "Create Test", href: ROUTES.ADMIN_CREATE_TEST }
         ];
       case "intern":
         return [

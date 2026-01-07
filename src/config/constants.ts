@@ -26,6 +26,7 @@ export const ROUTES = {
   ADMIN_COHORTS: "/admin/cohorts",
   ADMIN_CANDIDATES: "/admin/candidates",
   ADMIN_TESTS: "/admin/tests",
+  ADMIN_CREATE_TEST: "/admin/create-test-template",
   ADMIN_MODULE: "/admin/module",
   ADMIN_PROJECTS: "/admin/projects",
   ADMIN_WALLETS: "/admin/wallets",

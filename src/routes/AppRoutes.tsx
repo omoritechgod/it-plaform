@@ -24,6 +24,7 @@ import About from "../pages/About";
 import Jobs from "../pages/public/Jobs";
 import { useAuthStore } from "../stores/useAuthStore";
 import TrainingModulePage from "../pages/admin/TrainingModule";
+import CreateTestTemplate from "../pages/admin/CreateTestTemplate";
 
 const ProtectedRoute: React.FC<{
   children: React.ReactNode;
@@ -85,6 +86,7 @@ export const AppRoutes: React.FC = () => {
           />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="cohorts" element={<Cohorts />} />
+          <Route path="create-test-template" element={<CreateTestTemplate />} />
           <Route path="candidates" element={<Candidates />} />
           <Route path="module" element={<TrainingModulePage />} />
           <Route
@@ -139,6 +141,7 @@ export const AppRoutes: React.FC = () => {
           />
           <Route path="reports" element={<div>Reports Coming Soon</div>} />
         </Route>
+        
 
         {/* Intern Routes */}
         <Route
