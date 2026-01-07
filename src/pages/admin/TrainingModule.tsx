@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import {
-  PlusCircle,
   Video,
   FileText,
   Tag,
   Loader2,
   Trash2,
   Pencil,
-  MessageCircleMore,
+  ChevronRight,
+  Plus,
 } from "lucide-react";
 import z from "zod";
 import { useForm } from "react-hook-form";
@@ -20,6 +20,7 @@ import ErrorComponent from "../../components/ErrorComponent";
 import { TrainingModule } from "../../types";
 import EditModuleModal from "../../components/admin/ModuleModal";
 import LessonModal from "../../components/admin/Lesson";
+import { Link } from "react-router-dom";
 
 const trainingModuleSchema = z.object({
   title: z
@@ -142,12 +143,12 @@ const TrainingModulePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen mt-28 bg-gray-50 p-4 md:p-8 font-sans text-gray-900">
+    <div className="min-h-screen mt-28 p-4 md:p-0 font-sans text-gray-900">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-4">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-8">
+          <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 sticky top-8">
             <div className="flex items-center gap-2 mb-6">
-              <PlusCircle className="text-blue-600" size={24} />
+              <Plus className="text-white rounded-md bg-blue " size={24} />
               <h2 className="text-xl font-bold">New Module</h2>
             </div>
 
@@ -171,7 +172,7 @@ const TrainingModulePage: React.FC = () => {
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Slug
@@ -305,13 +306,12 @@ const TrainingModulePage: React.FC = () => {
           </div>
         </div>
 
-        {/* --- RIGHT: LIST SECTION --- */}
         <div className="lg:col-span-8 md:overflow-y-auto">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-extrabold text-gray-800">
+            <h2 className="text-2xl font-extrabold text-gray-700">
               Training Catalog
             </h2>
-            <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+            <span className="bg-blue/100 text-white px-3 py-1 rounded-full text-sm font-medium">
               {modules?.length} Modules
             </span>
           </div>
@@ -327,14 +327,137 @@ const TrainingModulePage: React.FC = () => {
               {modules?.map((m: TrainingModule, index) => (
                 <div
                   key={m.slug}
-                  className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
+                  className={`bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow`}
                 >
-                  <div className="relative group">
-                    {/* Action Buttons */}
-                    <div
-                      className={`absolute top-4 right-4 flex gap-2 bg-white/50 backdrop-blur rounded-3xl ${
-                        openLesson ? "opacity-100" : "opacity-0"
-                      } group-hover:opacity-100 transition`}
+                  <div className="w-full ">
+                    {/*header */}
+                    <div className="flex flex-row-reverse justify-between items-start">
+                      <div
+                        className={`flex gap-2 px-1.5 items-center bg-gray-50 backdrop-blur rounded-3xl transition`}
+                      >
+                        <button
+                          onClick={() => handleEditModule(m)}
+                          className="p-1.5 rounded-full text-gray-400 hover:text-green-500  hover:bg-green-100  transition"
+                          title="Edit module"
+                        >
+                          <Pencil size={15} />
+                        </button>
+
+                        <button
+                          onClick={() => handleDeleteModule(m.id)}
+                          className="p-1.5 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-100 transition"
+                          title="Delete module"
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
+
+                      <div className="flex justify-start flex-row- gap-1.5 items-start mb-4">
+                        <div
+                          className={`px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider ${
+                            m.level === "beginner"
+                              ? "bg-green-100 text-green-700"
+                              : m.level === "intermediate"
+                              ? "bg-orange-100 text-orange-700"
+                              : "bg-red-100 text-red-700"
+                          }`}
+                        >
+                          {m.level}
+                        </div>
+                        <span className="text-gray-400 font-mono text-sm">
+                          #{m.order}
+                        </span>
+                      </div>
+                    </div>
+
+                    <h3 className="text-lg capitalize font-bold group-hover:text-blue-600 transition-colors mb-2">
+                      {m.title}
+                    </h3>
+
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="flex items-center gap-1 text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                        <Tag size={12} /> {m.skill_tag}
+                      </div>
+                    </div>
+
+                    <p className="text-gray-500 text-sm line-clamp-2 mb-4">
+                      {m.description}
+                    </p>
+
+                    <div className="pt-4 border-t border-gray-50 flex justify-between items-center">
+                      <div className="flex gap-4">
+                        {m.resources?.pdf && (
+                          <a
+                            href={m.resources.pdf}
+                            target="_blank"
+                            className="text-red-500 hover:text-red-700 transition"
+                            title="Download PDF"
+                          >
+                            <FileText size={20} />
+                          </a>
+                        )}
+
+                        {m.resources?.video && (
+                          <a
+                            href={m.resources.video}
+                            target="_blank"
+                            className="text-blue/50  hover:text-blue/30  text-gray-400 transition"
+                            title="Watch Video"
+                          >
+                            <Video size={20} />
+                          </a>
+                        )}
+
+                        <span
+                          className={`text-xs font-bold uppercase flex ${
+                            m.status === "active"
+                              ? "text-green-500"
+                              : "text-gray-400"
+                          }`}
+                        >
+                          {m.status}
+                        </span>
+                      </div>
+                      <div className="flex items-center text-blue hover:text-blue/50 cursor-pointer font-semibold text-sm">
+                        <Link to={`/admin/module/${m.slug}`}>
+                          Manage Module
+                        </Link>
+                        <ChevronRight className="w-4 h-4" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+      {edit && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setEdit(false)}
+          ></div>
+
+          {/* Modal */}
+          <div className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto">
+            <EditModuleModal
+              module={selectedModule}
+              onClose={() => setEdit(false)}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default TrainingModulePage;
+
+{
+  /* <div
+                      className={`flex gap-2 bg-white/50 backdrop-blur rounded-3xl group-hover:opacity-100 transition`}
                     >
                       <button
                         onClick={() => handleEditModule(m)}
@@ -361,98 +484,5 @@ const TrainingModulePage: React.FC = () => {
                       >
                         <Trash2 size={15} />
                       </button>
-                    </div>
-
-                    <div className="flex justify-start flex-col-reverse gap-1 items-start mb-4">
-                      <div
-                        className={`px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider ${
-                          m.level === "beginner"
-                            ? "bg-green-100 text-green-700"
-                            : m.level === "intermediate"
-                            ? "bg-orange-100 text-orange-700"
-                            : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {m.level}
-                      </div>
-                      <span className="text-gray-400 font-mono text-sm">
-                        #{m.order}
-                      </span>
-                    </div>
-
-                    <h3 className="text-lg font-bold group-hover:text-blue-600 transition-colors mb-2">
-                      {m.title}
-                    </h3>
-
-                    <p className="text-gray-500 text-sm line-clamp-2 mb-4">
-                      {m.description}
-                    </p>
-
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="flex items-center gap-1 text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded">
-                        <Tag size={12} /> {m.skill_tag}
-                      </div>
-                    </div>
-
-                    <div className="pt-4 border-t border-gray-50 flex justify-between items-center">
-                      <div className="flex gap-4">
-                        {m.resources?.video && (
-                          <a
-                            href={m.resources.video}
-                            className="text-blue-500 hover:text-blue-700 transition"
-                            title="Watch Video"
-                          >
-                            <Video size={20} />
-                          </a>
-                        )}
-                        {m.resources?.pdf && (
-                          <a
-                            href={m.resources.pdf}
-                            className="text-red-500 hover:text-red-700 transition"
-                            title="Download PDF"
-                          >
-                            <FileText size={20} />
-                          </a>
-                        )}
-                      </div>
-
-                      <span
-                        className={`text-xs font-bold ${
-                          m.status === "active"
-                            ? "text-green-500"
-                            : "text-gray-400"
-                        }`}
-                      >
-                        {m.status.toUpperCase()}
-                      </span>
-                    </div>
-                  </div>
-                  {openLesson === index && <LessonModal moduleId={m.id} />}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-      {edit && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={() => setEdit(false)}
-          />
-
-          {/* Modal */}
-          <div className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto">
-            <EditModuleModal
-              module={selectedModule}
-              onClose={() => setEdit(false)}
-            />
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default TrainingModulePage;
+                    </div> */
+}

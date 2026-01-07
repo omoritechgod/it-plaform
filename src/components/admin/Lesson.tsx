@@ -79,7 +79,7 @@ const LessonForm = ({ lesson, onCancel, moduleId }: LessonFormProps) => {
     onSuccess: (data) => {
       console.log("create lesson", data);
       toast.success("updated lesson successful");
-      onCancel()
+      onCancel();
       queryClient.invalidateQueries({
         queryKey: ["lesson"],
       });
@@ -234,7 +234,32 @@ const LessonModal = ({ moduleId }: { moduleId: number | string }) => {
     },
     enabled: true,
   });
+
+  const queryClient = useQueryClient();
+
   const lesson = lessons.filter((p: Lesson) => p.module_id === moduleId);
+
+  const { mutate } = useMutation({
+    mutationKey: ["deleteLesson"],
+    mutationFn: async (id: string | number) => {
+      const res = await adminService.deleteLesson(id);
+      return res.data;
+    },
+  });
+
+  const onDelete = (id: string | number) => {
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this candidate? This action cannot be undone."
+      )
+    ) {
+      return;
+    }
+
+    mutate(id);
+
+    queryClient.invalidateQueries({ queryKey: ["lesson"] });
+  };
 
   return (
     <div className="bg-white relative rounded-2xl mt-4 border border-gray-100 shadow-sm">
@@ -292,7 +317,7 @@ const LessonModal = ({ moduleId }: { moduleId: number | string }) => {
                   <Pencil size={14} />
                 </button>
                 <button
-                  // onClick={() => onDelete(lesson.id)}
+                  onClick={() =>  onDelete(lesson.id)}
                   className="p-1.5 rounded-full hover:bg-red-50 text-gray-400 hover:text-red-600"
                 >
                   <Trash2 size={14} />

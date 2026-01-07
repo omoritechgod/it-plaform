@@ -157,7 +157,8 @@ class AdminService {
   }
 
   async updateLessonModule(
-    data: Lesson,id:number | string | undefined
+    data: Lesson,
+    id: number | string | undefined
   ): Promise<ApiResponse<TrainingModule>> {
     return api.put(`/api/lessons/${id}`, data);
   }
@@ -167,11 +168,15 @@ class AdminService {
   }
 
   async createLessonModule(
-    data: Lesson, moduleId: string | number
+    data: Lesson,
+    moduleId: string | number
   ): Promise<ApiResponse> {
     return api.post(`/api/module/${moduleId}/lessons`, data);
   }
 
+  async deleteLesson(id: string | number): Promise<ApiResponse<Lesson[]>> {
+    return api.delete(`/api/lessons/${id}`);
+  }
 
   // Project Management
   async getProjects(): Promise<ApiResponse<Project[]>> {

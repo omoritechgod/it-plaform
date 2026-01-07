@@ -5,6 +5,17 @@ import { Menu, X, User, LogOut } from "lucide-react";
 import { Button } from "../common/Button";
 import { useAuth } from "../../hooks/useAuth";
 import { ROUTES } from "../../config/constants";
+import {
+  LayoutDashboard,
+  Users,
+  Layers,
+  BookOpen,
+  ClipboardCheck,
+  FolderKanban,
+  Wallet,
+  ArrowDownUp,
+  BarChart3,
+} from "lucide-react";
 
 interface HeaderProps {
   variant?: "public" | "admin" | "intern";
@@ -65,6 +76,70 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
     }
   };
 
+  const desktopNav = [
+    {
+      label: "Dashboard",
+      href: "/admin/dashboard",
+      icon: LayoutDashboard,
+    },
+
+    {
+      label: "Programs",
+      icon: Layers,
+      children: [
+        {
+          label: "Cohorts",
+          href: "/admin/cohorts",
+          icon: Users,
+        },
+        {
+          label: "Modules",
+          href: "/admin/module",
+          icon: BookOpen,
+        },
+        {
+          label: "Tests",
+          href: "/admin/tests",
+          icon: ClipboardCheck,
+        },
+        {
+          label: "Projects",
+          href: "/admin/projects",
+          icon: FolderKanban,
+        },
+      ],
+    },
+
+    {
+      label: "Candidates",
+      href: "/admin/candidates",
+      icon: Users,
+    },
+
+    {
+      label: "Finance",
+      icon: Wallet,
+      children: [
+        {
+          label: "Wallets",
+          href: "/admin/wallets",
+          icon: Wallet,
+        },
+        {
+          label: "Withdrawals",
+          href: "/admin/withdrawals",
+          icon: ArrowDownUp,
+        },
+      ],
+    },
+
+    {
+      label: "Reports",
+      href: "/admin/reports",
+      icon: BarChart3,
+    },
+  ];
+
   const navItems = getNavItems();
 
   return (
@@ -94,26 +169,77 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
               bg ? "bg-transparent" : "bg-white/10"
             } backdrop-blur-md px-6 py-2 rounded-3xl`}
           >
-            <ul className="flex items-center space-x-8">
-              {navItems.map((item, index) => (
-                <li key={index} className="group relative">
-                  <Link
-                    key={item.href}
-                    to={item.href}
-                    className={`${
-                      bg
-                        ? "text-gray-800"
-                        : isAuthenticated
-                        ? "text-gray-800"
-                        : "text-white"
-                    } text-[16px] hover:text-blue transition-colors duration-200 font-medium`}
-                  >
-                    {item.label}
-                  </Link>
-                  <span className="absolute w-0 h-1 left-0 -bottom-1 rounded-md bg-blue group-hover:w-full duration-300 ease-in-out transform -rotate-6"></span>
-                </li>
-              ))}
-            </ul>
+            {variant === "public" ? (
+              <ul className="flex items-center space-x-8">
+                {navItems.map((item, index) => (
+                  <li key={index} className="group relative">
+                    <Link
+                      key={item.href}
+                      to={item.href}
+                      className={`${
+                        bg
+                          ? "text-gray-800"
+                          : isAuthenticated
+                          ? "text-gray-800"
+                          : "text-white"
+                      } text-[16px] hover:text-blue transition-colors duration-200 font-medium`}
+                    >
+                      {item.label}
+                    </Link>
+                    <span className="absolute w-0 h-1 left-0 -bottom-1 rounded-md bg-blue group-hover:w-full duration-300 ease-in-out transform -rotate-6"></span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <ul className="flex items-center space-x-8">
+                {desktopNav.map((item, index) => {
+                  return !item.children ? (
+                    <li key={index} className="group relative">
+                      <Link
+                        key={item.href}
+                        to={item.href}
+                        className={`${
+                          bg
+                            ? "text-gray-800"
+                            : isAuthenticated
+                            ? "text-gray-800"
+                            : "text-white"
+                        } text-[16px] hover:text-blue transition-colors duration-200 font-medium`}
+                      >
+                        {item.label}
+                      </Link>
+                      <span className="absolute w-0 h-1 left-0 -bottom-1 rounded-md bg-blue group-hover:w-full duration-300 ease-in-out transform -rotate-6"></span>
+                    </li>
+                  ) : (
+                    <li className="relative h-full group">
+                      <span
+                        className={`${
+                          bg
+                            ? "text-gray-800"
+                            : isAuthenticated
+                            ? "text-gray-800"
+                            : "text-white"
+                        } text-[16px] hover:text-blue transition-colors duration-200 font-medium cursor-pointer`}
+                      >
+                        {item.label}
+                      </span>
+                      <span className="absolute w-0 h-1 left-0 -bottom-1 rounded-md bg-blue group-hover:w-full duration-300 ease-in-out transform -rotate-6"></span>
+                      <div className="absolute -left-8  p-5 px-8 border invisible opacity-0 group-hover:opacity-100 ease-in-out duration-500 group-hover:visible border-gray-200 top-9 bg-white/90 rounded-lg shadow-lg backdrop-blur-md flex  flex-col gap-4">
+                        {item.children.map((item, _index) => (
+                          <Link
+                            className="w-full justify-end items-center flex flex-row-reverse gap-2 text-gray-500 border-gray-200 border-b hover:text-blue transition-all"
+                            to={item.href}
+                          >
+                            {item.label}
+                            <item.icon className="w-4 h-4" />
+                          </Link>
+                        ))}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </nav>
 
           {/* Auth Section */}
