@@ -59,8 +59,6 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
           { label: "Projects", href: ROUTES.ADMIN_PROJECTS },
           { label: "Wallets", href: ROUTES.ADMIN_WALLETS },
           { label: "Reports", href: ROUTES.ADMIN_REPORTS },
-          { label: "Create Test", href: ROUTES.ADMIN_CREATE_TEST },
-          { label: "Questions Management", href: ROUTES.ADMIN_QUESTIONS_MANAGEMENT }, // Added here
         ];
       case "intern":
         return [
@@ -176,7 +174,6 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
                 {navItems.map((item, index) => (
                   <li key={index} className="group relative">
                     <Link
-                      key={item.href}
                       to={item.href}
                       className={`${
                         bg

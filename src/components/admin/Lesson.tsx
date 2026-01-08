@@ -1,18 +1,20 @@
-import { PlayCircle, Clock, Pencil, Trash2, Plus, Loader2 } from "lucide-react";
+import { PlayCircle, Clock, Pencil, Trash2, Plus } from "lucide-react";
 import { Lesson } from "../../types/index";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../common/Button";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import adminService from "../../services/admin.service";
 import { toast } from "react-toastify";
 
 type LessonFormProps = {
-  moduleId: number | string;
+  moduleId: number;
   lesson: Lesson | null;
   onCancel: () => void;
+  edit: boolean;
+  refetch: () => void;
 };
 
 const lessonSchema = z.object({
@@ -40,7 +42,13 @@ const lessonSchema = z.object({
 
 type LessonFormData = z.infer<typeof lessonSchema>;
 
-const LessonForm = ({ lesson, onCancel, moduleId }: LessonFormProps) => {
+const LessonForm = ({
+  lesson,
+  onCancel,
+  moduleId,
+  edit,
+  refetch,
+}: LessonFormProps) => {
   const {
     register,
     reset,
@@ -48,6 +56,9 @@ const LessonForm = ({ lesson, onCancel, moduleId }: LessonFormProps) => {
     handleSubmit,
   } = useForm({
     resolver: zodResolver(lessonSchema),
+    defaultValues: {
+      id: moduleId,
+    },
   });
   const queryClient = useQueryClient();
 
@@ -56,14 +67,11 @@ const LessonForm = ({ lesson, onCancel, moduleId }: LessonFormProps) => {
       return adminService.createLessonModule(data, moduleId);
     },
 
-    onSuccess: (data) => {
-      console.log("create lesson", data);
-
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["shedule", moduleId] });
+      refetch();
       toast.success("creating lesson was successful");
       onCancel();
-      queryClient.invalidateQueries({
-        queryKey: ["lesson"],
-      });
     },
     onError: () => {
       console.log("create lesson");
@@ -73,16 +81,14 @@ const LessonForm = ({ lesson, onCancel, moduleId }: LessonFormProps) => {
 
   const { mutate: updateLesson, isPending: pending } = useMutation({
     mutationFn: (data: LessonFormData) => {
-      return adminService.updateLessonModule(data, lesson?.id);
+      return adminService.updateLessonModule(data, lesson.id);
     },
 
-    onSuccess: (data) => {
-      console.log("create lesson", data);
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["shedule", moduleId] });
       toast.success("updated lesson successful");
+      refetch();
       onCancel();
-      queryClient.invalidateQueries({
-        queryKey: ["lesson"],
-      });
     },
     onError: () => {
       console.log("update lesson");
@@ -93,7 +99,7 @@ const LessonForm = ({ lesson, onCancel, moduleId }: LessonFormProps) => {
   const onSubmit = (data: LessonFormData) => {
     console.log(lesson);
 
-    if (lesson === undefined || lesson === null) {
+    if (edit === false) {
       return creatLesson(data);
     } else {
       return updateLesson(data);
@@ -113,9 +119,9 @@ const LessonForm = ({ lesson, onCancel, moduleId }: LessonFormProps) => {
     }
   }, [reset, lesson]);
   return (
-    <div className="p-6 absolute bg-white/80 rounded-lg backdrop-blur w-full overflow-y-scroll left-0 bottom-0 space-y-4 border-t">
+    <div className="p-6 fixed z-50 bg-white rounded-lg backdrop-blur w-full overflow-y-scroll left-0 bottom-0 space-y-4 border border-gray-200">
       <h4 className="font-semibold">
-        {lesson ? "Edit Lesson" : "Create Lesson"}
+        {edit ? "Edit Lesson" : "Create Lesson"}
       </h4>
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -222,18 +228,18 @@ const LessonForm = ({ lesson, onCancel, moduleId }: LessonFormProps) => {
   );
 };
 
-const LessonModal = ({ moduleId }: { moduleId: number | string }) => {
+const LessonModal = ({
+  moduleId,
+  lessons,
+  refetch,
+}: {
+  moduleId: number;
+  lessons: Lesson[];
+  refetch: () => void;
+}) => {
   const [showForm, setShowForm] = useState<boolean>(false);
-
-  const { data: lessons = [], isLoading } = useQuery({
-    queryKey: ["lesson"],
-    queryFn: async () => {
-      const res = await adminService.getLessonModule();
-      console.log(res);
-      return res.data;
-    },
-    enabled: true,
-  });
+  const [edit, setEdit] = useState<boolean>(false);
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -244,6 +250,11 @@ const LessonModal = ({ moduleId }: { moduleId: number | string }) => {
     mutationFn: async (id: string | number) => {
       const res = await adminService.deleteLesson(id);
       return res.data;
+    },
+    onSuccess: async () => {
+      refetch();
+      console.log(moduleId)
+      await queryClient.invalidateQueries({ queryKey: ["shedule", moduleId] });
     },
   });
 
@@ -257,76 +268,97 @@ const LessonModal = ({ moduleId }: { moduleId: number | string }) => {
     }
 
     mutate(id);
-
-    queryClient.invalidateQueries({ queryKey: ["lesson"] });
   };
 
   return (
-    <div className="bg-white relative rounded-2xl mt-4 border border-gray-100 shadow-sm">
-      {isLoading && (
+    <div className=" relative mt-10">
+      {/* {isLoading && (
         <div className="absolute inset-0 bg-white flex items-center justify-center">
           <Loader2 className="w-4 h-4 animate-spin" />
           <p className="text-sm text-gray-500"> Loading</p>
         </div>
-      )}
+      )} */}
       {/* Header */}
       {showForm && (
         <LessonForm
-          lesson={lesson[0]}
+          lesson={selectedLesson}
           moduleId={moduleId}
+          edit={edit}
+          refetch={refetch}
           onCancel={() => setShowForm(false)}
         />
       )}
-      {lesson.length === 0 ? (
-        <div className="p-6 text-center">
-          <p className="text-sm text-gray-500 mb-4">No lessons added yet</p>
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700"
-          >
-            <Plus size={16} /> Add Lesson
-          </button>
-        </div>
-      ) : (
-        lesson.map((lesson: Lesson) => (
-          <ul key={lesson.id} className="divide-y">
-            <li className="group flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition cursor-pointer">
-              <div className="flex items-center gap-4">
-                <PlayCircle className="text-blue-500" size={20} />
+      <div className="flex justify-between items-center">
+        <h1>Lessons</h1>
+        <Button
+          onClick={() => setShowForm(!showForm)}
+          className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700"
+        >
+          <Plus size={16} /> Add Lesson
+        </Button>
+      </div>
+      <div className="rounded-2xl mt-4 bg-white border border-gray-100 shadow-sm">
+        {lesson.length === 0 ? (
+          <div className="p-6 text-center">
+            <p className="text-sm text-gray-500 mb-4">No lessons added yet</p>
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700"
+            >
+              <Plus size={16} /> Add Lesson
+            </button>
+          </div>
+        ) : (
+          <ul className="divide-y">
+            {lesson.map((lesson: Lesson, index) => (
+              <li
+                className={`group flex items-center ${
+                  lessons.length - 1 === index
+                    ? "border-b-0"
+                    : "border-b border-gray-100 "
+                } justify-between px-5 py-4 hover:bg-gray-50 transition cursor-pointer`}
+              >
+                <div className="flex items-center gap-4">
+                  <PlayCircle className="text-blue-500" size={20} />
 
-                <div>
-                  <p className="font-medium text-gray-900">
-                    {lesson?.order}. {lesson?.title}
-                  </p>
-                  <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
-                    <Clock size={12} />
-                    {lesson.duration_minutes} mins
+                  <div>
+                    <p className="font-medium text-gray-900">
+                      {lesson?.order}. {lesson?.title}
+                    </p>
+                    <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                      <Clock size={12} />
+                      {lesson.duration_minutes} mins
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Actions */}
-              <div
-                className="flex gap-2 opacity-0 group-hover:opacity-100 transition"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <button
-                  onClick={() => setShowForm(!showForm)}
-                  className="p-1.5 rounded-full hover:bg-blue-50 text-gray-400 hover:text-blue-600"
+                {/* Actions */}
+                <div
+                  className="flex gap-2 opacity-0 group-hover:opacity-100 transition"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <Pencil size={14} />
-                </button>
-                <button
-                  onClick={() =>  onDelete(lesson.id)}
-                  className="p-1.5 rounded-full hover:bg-red-50 text-gray-400 hover:text-red-600"
-                >
-                  <Trash2 size={14} />
-                </button>
-              </div>
-            </li>
+                  <button
+                    onClick={() => {
+                      setSelectedLesson(lesson);
+                      setEdit(true);
+                      setShowForm(!showForm);
+                    }}
+                    className="p-1.5 rounded-full hover:bg-blue-50 text-gray-400 hover:text-blue-600"
+                  >
+                    <Pencil size={14} />
+                  </button>
+                  <button
+                    onClick={() => onDelete(lesson.id)}
+                    className="p-1.5 rounded-full hover:bg-red-50 text-gray-400 hover:text-red-600"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              </li>
+            ))}
           </ul>
-        ))
-      )}
+        )}
+      </div>
     </div>
   );
 };

@@ -11,6 +11,8 @@ import {
   Intern,
   Lesson,
   Candidate,
+  SkillQuestion,
+  Test,
 } from "../types";
 import { trainingModuleData } from "../pages/admin/TrainingModule";
 
@@ -156,9 +158,15 @@ class AdminService {
     return api.put(`/api/training/modules/${data.id}`, data);
   }
 
+  async getOneTrainingModule(
+    id: number | string
+  ): Promise<ApiResponse<TrainingModule>> {
+    return api.get(`/api/training/modules/${id}`);
+  }
+
   async updateLessonModule(
     data: Lesson,
-    id: number | string | undefined
+    id: number | string
   ): Promise<ApiResponse<TrainingModule>> {
     return api.put(`/api/lessons/${id}`, data);
   }
@@ -176,6 +184,48 @@ class AdminService {
 
   async deleteLesson(id: string | number): Promise<ApiResponse<Lesson[]>> {
     return api.delete(`/api/lessons/${id}`);
+  }
+
+  // question management
+  async createQuestionModule(
+    data: SkillQuestion,
+    moduleId: string | number
+  ): Promise<ApiResponse> {
+    return api.post(`/api/module/${moduleId}/quests`, {
+      ...data,
+      module_id: moduleId,
+    });
+  }
+
+  async getOneQuestionModule(moduleId: string | number): Promise<ApiResponse> {
+    return api.get(`/api/module/${moduleId}/quests`);
+  }
+
+  async updateQuestionModule(moduleId: string | number): Promise<ApiResponse> {
+    return api.put(`/api/module/${moduleId}/quests`);
+  }
+
+  // create new test
+  async createTestModule(
+    data: Test,
+    moduleId: string | number
+  ): Promise<ApiResponse> {
+    return api.post(`/api/template`, {
+      ...data,
+      module_id: moduleId,
+    });
+  }
+
+  async getOneTestModule(moduleId: string | number): Promise<ApiResponse> {
+    return api.get(`/api/template/${moduleId}`);
+  }
+
+  async updateOnetestModule(moduleId: string | number): Promise<ApiResponse> {
+    return api.put(`/api/template/${moduleId}`);
+  }
+
+  async deleteOnetestModule(testId: string | number): Promise<ApiResponse> {
+    return api.delete(`/api/template/${testId}`);
   }
 
   // Project Management

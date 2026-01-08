@@ -19,7 +19,6 @@ import { Button } from "../../components/common/Button";
 import ErrorComponent from "../../components/ErrorComponent";
 import { TrainingModule } from "../../types";
 import EditModuleModal from "../../components/admin/ModuleModal";
-import LessonModal from "../../components/admin/Lesson";
 import { Link } from "react-router-dom";
 
 const trainingModuleSchema = z.object({
@@ -59,8 +58,6 @@ const TrainingModulePage: React.FC = () => {
   const [selectedModule, setSelectedModule] = useState<TrainingModule | null>(
     null
   );
-  const [openLesson, setOpenLesson] = useState<number | null>(null);
-  // const [selectdLesson, setSelectdLesson] = useState<null>(null);
 
   const {
     handleSubmit,
@@ -143,7 +140,7 @@ const TrainingModulePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen mt-28 p-4 md:p-0 font-sans text-gray-900">
+    <div className="min-h-screen mt-28 font-sans text-gray-900">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-4">
           <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 sticky top-8">
@@ -326,7 +323,7 @@ const TrainingModulePage: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {modules?.map((m: TrainingModule, index) => (
                 <div
-                  key={m.slug}
+                  key={index}
                   className={`bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow`}
                 >
                   <div className="w-full ">
@@ -419,9 +416,7 @@ const TrainingModulePage: React.FC = () => {
                         </span>
                       </div>
                       <div className="flex items-center text-blue hover:text-blue/50 cursor-pointer font-semibold text-sm">
-                        <Link to={`/admin/module/${m.slug}`}>
-                          Manage Module
-                        </Link>
+                        <Link to={`/admin/module/${m.id}`}>Manage Module</Link>
                         <ChevronRight className="w-4 h-4" />
                       </div>
                     </div>
