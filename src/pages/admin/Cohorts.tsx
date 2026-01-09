@@ -136,9 +136,6 @@ export const Cohorts: React.FC = () => {
     }
   };
 
-  // // Original modal but wired to API
-
-  // RETURN UI (unchanged)
   return (
     <div className="mt-28 space-y-8">
       {/* Header */}

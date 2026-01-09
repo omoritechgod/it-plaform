@@ -45,21 +45,6 @@ const CreateTestTemplate: React.FC = () => {
       return;
     }
 
-    setLoading(true);
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      toast.success(
-        `Test template "${testName}" created successfully! Level: ${level}, Duration: ${duration} minutes`
-      );
-      setTestName(""); // Reset field
-      setLevel("Beginner"); // Reset level
-      setDuration(""); // Reset duration
-    } catch (error) {
-      toast.error("Failed to create test template. Please try again.");
-    } finally {
-      setLoading(false);
-    }
   };
 
   // Function to get status color
