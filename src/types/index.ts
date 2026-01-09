@@ -89,12 +89,40 @@ export interface SkillTest {
 }
 
 export interface Question {
-  id: string;
+  id: string | number;
   question: string;
-  type: "multiple_choice" | "text" | "image";
+  type?: "multiple_choice" | "text" | "image";
   options?: string[];
   correct_answer: string;
   image_url?: string;
+}
+
+export interface SkillQuestion {
+  id?: number;
+  skill_tag: string;
+  difficulty: "easy" | "medium" | "hard";
+  type: "mcq" | "multi_select" | "short_text" | "file_upload";
+  question_text: string;
+  options: string[];
+  correct_answer: string[];
+  explanation?: string;
+  metadata: {
+    time_limit: number;
+    points: number;
+  };
+}
+
+export interface Test {
+  name: string;
+  num_questions: number;
+  time_limit_minutes: number;
+  shuffle_questions: boolean;
+  allowed_attempts: number;
+  pass_score_pct: number;
+  diminishing_attempts: {
+    attempt_2: 0.9;
+    attempt_3: 0.8;
+  };
 }
 
 export interface Lesson {
@@ -107,6 +135,11 @@ export interface Lesson {
   duration_minutes: number;
 }
 
+export interface Quest {
+  id: number;
+  title: string;
+  status: "active" | "inactive";
+}
 
 export interface Project {
   id: string;

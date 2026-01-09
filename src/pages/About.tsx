@@ -46,125 +46,133 @@ const About = () => {
     return () => clearInterval(interval);
   }, [count]);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        stats.forEach((item, index) => {
-          let current = item.start;
+  //   const observer = new IntersectionObserver((entries) => {
+  //     if (entries[0].isIntersecting) {
+  //       stats.forEach((item, index) => {
+  //         let current = item.start;
 
-          const interval = setInterval(() => {
-            if (current < item.end) {
-              current++;
-              setRate((prev) => ({ ...prev, [index]: current }));
-            } else {
-              clearInterval(interval);
-            }
-          }, 300);
-        });
-      }
-    });
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-  }, []);
+  //         const interval = setInterval(() => {
+  //           if (current < item.end) {
+  //             current++;
+  //             setRate((prev) => ({ ...prev, [index]: current }));
+  //           } else {
+  //             clearInterval(interval);
+  //           }
+  //         }, 300);
+  //       });
+  //     }
+  //   });
+  //   if (ref.current) {
+  //     observer.observe(ref.current);
+  //   }
+  // }, []);
   return (
-    <div>
+    <div className="bg-white">
+      {/* Hero */}
       <SubHero
         title="Empowering the Next Generation of Innovators."
-        description="At Internship Platform, we believe in your potential to create,
-              lead, and make an impact"
+        description="We believe in your potential to create, lead, and make impact through real-world experience."
       />
 
-      <section className="max-w-5xl relative py-20  px-4 md:px-0  mx-auto">
-        <motion.div className="flex flex-col justify-center items-center">
-          <div className="w-full flex justify-center items-center flex-col px-4 py-8 text-gray-700 text-lg">
-            <p className="text-center">
-              We’re building Africa’s most trusted ecosystem for experiential
-              learning connecting passionate interns to real projects, guided
-              mentorship, and growth opportunities in tech. Our mission is to
-              empower the next generation of innovators by providing hands-on
-              experience that bridges the gap between education and career.
-            </p>
-          </div>
-          <div className="w-full text-gray-700 text-lg grid md:grid-cols-2 gap-6 mt-20">
-            <div className="flex justify-center items-center px-4 py-8 bg-white shadow-md border rounded-md  flex-col">
-              <h1 className="text-dark_blue text-xl mb-2 flex items-center flex-row-reverse gap-4">
-                Mission <Target fill="#004a7c" className="w-12 text-white h-12 " />
-              </h1>
-              <p className="">
-                We’re building Africa’s most trusted ecosystem for experiential
-                learning connecting passionate interns to real projects,
-                guided mentorship, and growth opportunities in tech. Our mission
-                is to empower the next generation of innovators by providing
-                hands-on experience that bridges the gap between education and
-                career.
-              </p>
-            </div>
-            <div className="flex justify-center items-center flex-col px-4 py-8 bg-white shadow-md border rounded-md ">
-              <h1 className="text-dark_blue flex flex-row-reverse items-center gap-4 text-xl mb-2">
-                Vision <Eye fill="#004a7c" className="w-12 text-white h-12" />
-              </h1>
-              <p className="">
-                We’re building Africa’s most trusted ecosystem for experiential
-                learning connecting passionate interns to real projects,
-                guided mentorship, and growth opportunities in tech. Our mission
-                is to empower the next generation of innovators by providing
-                hands-on experience that bridges the gap between education and
-                career.
-              </p>
-            </div>
-          </div>
+      {/* Narrative */}
+      <section className="max-w-5xl mx-auto py-24 px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          className="text-center max-w-3xl mx-auto"
+        >
+          <p className="text-lg leading-relaxed text-gray-600">
+            We’re building Africa’s most trusted ecosystem for experiential
+            learning — connecting passionate interns to real projects, guided
+            mentorship, and meaningful growth opportunities in tech.
+          </p>
         </motion.div>
-      </section>
 
-      <section
-        ref={ref}
-        className="max-w-5xl mx-auto py-10 px-4 md:px-0 grid md:grid-cols-3 gap-6"
-      >
-        {stats.map((item, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="p-6 rounded-lg text-center flex flex-col items-center justify-center"
-          >
-            <h3 className="text-4xl font-bold mb-2">
-              {rate[index]}
-              {index == 2 ? "%" : "+"}
-            </h3>
-            <p className="font-bold text-2xl capitalize">{item.title}</p>
-            <p className="font-normal lowercase">{item.description}</p>
-          </motion.div>
-        ))}
-      </section>
-
-      <section className="md:max-w-5xl mx-auto px-4 md:px-0 py-10 pb-16 bg-[#FAFAFA]">
-        <Title
-          title="Our Structure"
-          description="The Internship Platform is powered by three interconnected arms
-            driving growth, innovation, and learning."
-        />
-
-        <div className="grid md:grid-cols-3 mt-6 gap-6">
-          {companyArms.map((arm) => (
-            <div
-              key={arm.title}
-              className="relative rounded-2xl overflow-hidden group shadow-md"
+        {/* Mission & Vision */}
+        <div className="grid md:grid-cols-2 gap-8 mt-24">
+          {[
+            {
+              title: "Mission",
+              icon: Target,
+              text: "To empower the next generation of innovators by providing hands-on experience that bridges education and career.",
+            },
+            {
+              title: "Vision",
+              icon: Eye,
+              text: "To become Africa’s most trusted platform for experiential learning, mentorship, and career growth.",
+            },
+          ].map((item, index) => (
+            <motion.div
+              key={item.title}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.15 }}
+              viewport={{ once: true }}
+              className="
+            relative bg-white rounded-2xl border border-gray-200
+            shadow-sm hover:shadow-lg transition
+            p-8 text-center
+          "
             >
-              <img
-                src={arm.background}
-                alt={arm.title}
-                className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition"
-              />
-              <div className="relative p-8 bg-black/40 text-white backdrop-blur-sm h-full flex flex-col justify-center">
-                <arm.icon className="w-10 h-10 mb-4 text-light_blue" />
-                <h3 className="text-xl font-semibold mb-2">{arm.title}</h3>
-                <p className="text-sm text-gray-200">{arm.description}</p>
+              <div className="flex justify-center mb-4">
+                <div className="w-14 h-14 rounded-full bg-blue/10 flex items-center justify-center">
+                  <item.icon className="w-7 h-7 text-blue/70" />
+                </div>
               </div>
-            </div>
+
+              <h3 className="text-xl font-semibold text-black mb-2">
+                {item.title}
+              </h3>
+
+              <p className="text-gray-600 text-sm leading-relaxed">
+                {item.text}
+              </p>
+            </motion.div>
           ))}
+        </div>
+      </section>
+
+      {/* Structure */}
+      <section className="bg-gray-50 py-24 px-4">
+        <div className="max-w-5xl mx-auto">
+          <Title
+            title="Our Structure"
+            description="Three interconnected arms powering growth, innovation, and learning."
+          />
+
+          <div className="grid md:grid-cols-3 gap-8 mt-12">
+            {companyArms.map((arm) => (
+              <motion.div
+                key={arm.title}
+                whileHover={{ y: -6 }}
+                transition={{ type: "spring", stiffness: 200 }}
+                className="
+              relative rounded-3xl overflow-hidden
+              shadow-md hover:shadow-xl transition
+            "
+              >
+                <img
+                  src={arm.background}
+                  alt={arm.title}
+                  className="absolute inset-0 w-full h-full object-cover scale-105"
+                />
+
+                <div
+                  className="
+              relative h-full p-8 flex flex-col justify-end
+              bg-gradient-to-t from-black/70 via-black/40 to-transparent
+              text-white
+            "
+                >
+                  <arm.icon className="w-10 h-10 mb-4 text-blue-300" />
+                  <h3 className="text-xl font-semibold mb-2">{arm.title}</h3>
+                  <p className="text-sm text-gray-200">{arm.description}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
