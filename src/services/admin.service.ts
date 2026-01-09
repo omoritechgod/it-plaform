@@ -201,8 +201,11 @@ class AdminService {
     return api.get(`/api/module/${moduleId}/quests`);
   }
 
-  async updateQuestionModule(moduleId: string | number): Promise<ApiResponse> {
-    return api.put(`/api/module/${moduleId}/quests`);
+  async updateQuestionModule(
+    data: SkillQuestion,
+    moduleId: string | number
+  ): Promise<ApiResponse> {
+    return api.put(`/api/module/${moduleId}/quests`, data);
   }
 
   // create new test

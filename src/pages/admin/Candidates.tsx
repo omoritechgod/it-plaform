@@ -102,42 +102,35 @@ export const Candidates: React.FC = () => {
     }
   };
 
-  const deleteCandidate = (candidateId: string) => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete this candidate? This action cannot be undone."
-      )
-    ) {
-    }
-  };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "approved":
-        return "text-green-600 bg-green-50";
-      case "rejected":
-        return "text-red-600 bg-red-50";
-      default:
-        return "text-yellow-600 bg-yellow-50";
-    }
-  };
 
-  const getStageColor = (stage: string) => {
-    switch (stage) {
-      case "application":
-        return "text-blue-600 bg-blue-50";
-      case "agreement":
-        return "text-purple-600 bg-purple-50";
-      case "skill_test":
-        return "text-orange-600 bg-orange-50";
-      case "interview":
-        return "text-green-600 bg-green-50";
-      case "training":
-        return "text-indigo-600 bg-indigo-50";
-      default:
-        return "text-gray-600 bg-gray-50";
-    }
-  };
+  // const getStatusColor = (status: string) => {
+  //   switch (status) {
+  //     case "approved":
+  //       return "text-green-600 bg-green-50";
+  //     case "rejected":
+  //       return "text-red-600 bg-red-50";
+  //     default:
+  //       return "text-yellow-600 bg-yellow-50";
+  //   }
+  // };
+
+  // const getStageColor = (stage: string) => {
+  //   switch (stage) {
+  //     case "application":
+  //       return "text-blue-600 bg-blue-50";
+  //     case "agreement":
+  //       return "text-purple-600 bg-purple-50";
+  //     case "skill_test":
+  //       return "text-orange-600 bg-orange-50";
+  //     case "interview":
+  //       return "text-green-600 bg-green-50";
+  //     case "training":
+  //       return "text-indigo-600 bg-indigo-50";
+  //     default:
+  //       return "text-gray-600 bg-gray-50";
+  //   }
+  // };
 
   const BulkEmailModal = () => (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -298,7 +291,7 @@ export const Candidates: React.FC = () => {
       {/* Candidates Table */}
       <Card padding="none">
         <div className="overflow-x-auto">
-          <input
+          {/* <input
             type="checkbox"
             checked={
               selectedCandidates.length === filteredCandidates?.length &&
@@ -306,10 +299,10 @@ export const Candidates: React.FC = () => {
             }
             onChange={handleSelectAll}
             className="rounded border-gray-300 text-blue-600"
-          />
-          <table className="w-full bg-blue rounded-md text-sm text-left text-white">
+          /> */}
+          <table className="w-full rounded-md text-sm text-left text-white">
             {/* Header */}
-            <thead className=" text-white/60 border-b border-gray-400 ">
+            <thead className=" text-gray-600 border-b border-gray-100 ">
               <tr>
                 {/* User */}
                 <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">

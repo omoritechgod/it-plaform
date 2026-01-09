@@ -32,31 +32,45 @@ export default function InternProgressCard({
   return (
     <motion.tr
       key={data.id}
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
-      className="border-b border-white/5 hover:bg-white/5 transition"
+      transition={{ delay: index * 0.04, ease: "easeOut" }}
+      className="
+    group bg-white
+    hover:bg-blue-50/40
+    transition-all duration-300
+    border-b border-gray-100
+  "
     >
-      {/* User Info */}
-      <td className="px-6 py-4">
-        <div className="font-semibold">{data.name}</div>
-        <div className="text-xs text-white/50">{data.email}</div>
+      {/* User */}
+      <td className="px-6 py-5">
+        <div className="flex flex-col">
+          <span className="font-medium text-black leading-tight">
+            {data.name}
+          </span>
+          <span className="text-xs text-gray-500">{data.email}</span>
+        </div>
       </td>
 
       {/* Skills */}
-      <td className="px-6 py-4">
-        <div className="max-w-48 flex flex-wrap gap-1">
+      <td className="px-6 py-5">
+        <div className="flex flex-wrap gap-1.5 max-w-56">
           {normalizeSkills(data.skills).length > 0 ? (
             normalizeSkills(data.skills).map((skill) => (
               <span
                 key={skill}
-                className="px-2 py-1 text-xs rounded bg-white/10 text-white/80"
+                className="
+              rounded-full px-2.5 py-1
+              text-[11px] font-medium
+              bg-blue-100 text-blue/70
+              ring-1 ring-blue/10
+            "
               >
                 {skill}
               </span>
             ))
           ) : (
-            <span className="text-xs text-white/40 italic">
+            <span className="text-xs italic text-gray-400">
               No skills added
             </span>
           )}
@@ -64,28 +78,33 @@ export default function InternProgressCard({
       </td>
 
       {/* Status + Actions */}
-      <td className="px-6 flex flex-col-reverse py-4">
+      <td className="px-6 py-5">
         <div className="flex items-center gap-3">
           <span
-            className={`px-3 py-1 text-xs rounded-full capitalize font-medium
-              ${
-                data.status === "approved"
-                  ? "bg-emerald-500/15 text-emerald-400"
-                  : data.status === "pending"
-                  ? "bg-yellow-500/15 text-yellow-400"
-                  : "bg-red-500/15 text-red-400"
-              }
-            `}
+            className={`px-3 py-1 rounded-full text-xs font-semibold capitalize
+          ${
+            data.status === "approved"
+              ? "bg-emerald-100 text-emerald-700 ring-1 ring-emerald-600/20"
+              : data.status === "pending"
+              ? "bg-yellow-100 text-yellow-700 ring-1 ring-yellow-600/20"
+              : "bg-red-100 text-red-700 ring-1 ring-red-600/20"
+          }
+        `}
           >
             {data.status}
           </span>
 
-          {/* Actions (only if pending) */}
+          {/* Actions */}
           {data.status === "pending" && (
-            <div className="flex gap-1">
+            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition">
               <button
                 onClick={handleApprove}
-                className="p-1.5 rounded-full bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition"
+                className="
+              p-1.5 rounded-full
+              bg-emerald-600/10 text-emerald-700
+              hover:bg-emerald-600 hover:text-white
+              transition shadow-sm
+            "
                 title="Approve"
               >
                 <Check size={14} />
@@ -93,7 +112,12 @@ export default function InternProgressCard({
 
               <button
                 onClick={handleReject}
-                className="p-1.5 rounded-full bg-red-500/10 text-red-400 hover:bg-red-500/20 transition"
+                className="
+              p-1.5 rounded-full
+              bg-red-600/10 text-red-700
+              hover:bg-red-600 hover:text-white
+              transition shadow-sm
+            "
                 title="Reject"
               >
                 <X size={14} />
@@ -104,17 +128,17 @@ export default function InternProgressCard({
       </td>
 
       {/* Meta */}
-      <td className="px-6 py-4">
-        <div className="flex flex-col gap-1 text-xs text-white/60">
+      <td className="px-6 py-5">
+        <div className="flex flex-col gap-1 text-xs text-gray-500">
           <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4" />
+            <Calendar className="w-4 h-4 text-blue/70" />
             Joined {new Date(data.createdAt).toLocaleDateString()}
           </div>
 
           <div
-            className={`flex items-center gap-2 ${
-              data.emailVerifiedAt ? "text-emerald-400" : "text-white/40"
-            }`}
+            className={`flex items-center gap-2 font-medium
+          ${data.emailVerifiedAt ? "text-emerald-700" : "text-gray-400"}
+        `}
           >
             <Wallet className="w-4 h-4" />
             {data.emailVerifiedAt ? "Email Verified" : "Email Not Verified"}

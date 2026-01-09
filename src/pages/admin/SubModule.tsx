@@ -139,9 +139,13 @@ const SubModule = () => {
         <Overview module={module.data} questions={questions.data} />
       )}
       {count === 2 && (
-        <LessonModal moduleId={module.data.id} lessons={lessons.data} refetch={refetch} />
+        <LessonModal
+          moduleId={module.data.id}
+          lessons={lessons.data}
+          refetch={refetch}
+        />
       )}
-      {count === 3 && <QuestionsManagement />}
+      {count === 3 && <QuestionsManagement questions={questions.data} refetch={refetch} moduleId={module.data.id} />}
       {count === 4 && (
         <div className="mt-6 flex items-center rounded-md shadow-md bg-white p-4 justify-center">
           <p>Coming Soon</p>
@@ -171,7 +175,7 @@ const SubModule = () => {
 };
 
 const btnText = [
-  "overview",
+  "Overview",
   "Lessons",
   "Questions",
   "Templates",

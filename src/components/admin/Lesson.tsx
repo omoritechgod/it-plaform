@@ -107,7 +107,7 @@ const LessonForm = ({
   };
 
   useEffect(() => {
-    if (lesson) {
+    if (edit && lesson) {
       reset({
         id: lesson.id,
         title: lesson.title,
@@ -217,10 +217,10 @@ const LessonForm = ({
 
           <Button
             type="submit"
-            disabled={lesson ? pending : isPending}
+            disabled={edit ? pending : isPending}
             className="flex items-center gap-2"
           >
-            {lesson ? "Update Lesson" : "Create Lesson"}
+            {edit ? "Update Lesson" : "Create Lesson"}
           </Button>
         </div>
       </form>
@@ -253,7 +253,7 @@ const LessonModal = ({
     },
     onSuccess: async () => {
       refetch();
-      console.log(moduleId)
+      console.log(moduleId);
       await queryClient.invalidateQueries({ queryKey: ["shedule", moduleId] });
     },
   });
@@ -285,7 +285,10 @@ const LessonModal = ({
           moduleId={moduleId}
           edit={edit}
           refetch={refetch}
-          onCancel={() => setShowForm(false)}
+          onCancel={() => {
+            setShowForm(false);
+            setEdit(false);
+          }}
         />
       )}
       <div className="flex justify-between items-center">

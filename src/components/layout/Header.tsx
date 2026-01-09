@@ -210,7 +210,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
                       <span className="absolute w-0 h-1 left-0 -bottom-1 rounded-md bg-blue group-hover:w-full duration-300 ease-in-out transform -rotate-6"></span>
                     </li>
                   ) : (
-                    <li className="relative h-full group">
+                    <li key={index} className="relative h-full group">
                       <span
                         className={`${
                           bg
