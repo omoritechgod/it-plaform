@@ -10,6 +10,7 @@ import {
   ToggleLeft,
   ToggleRight,
   Loader2,
+  ChevronRight,
 } from "lucide-react";
 import { Button } from "../../components/common/Button";
 import { Card } from "../../components/common/Card";
@@ -19,28 +20,15 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../../services/api";
 import CreateCohortModal from "../../components/admin/CreateCohortModal";
 import ErrorComponent from "../../components/ErrorComponent";
-
-interface Cohort {
-  id: string;
-  name: string;
-  description: string;
-  start_date: string;
-  end_date: string;
-  max_slot: number;
-  settings: {
-    duration: string;
-    level: string;
-  };
-  current_interns: number;
-  is_accepting: boolean;
-  created_at: string;
-}
+import { useNavigate } from "react-router-dom";
+import { Cohort } from "../../types";
 
 export const Cohorts: React.FC = () => {
   const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
-  // const [editingCohort, setEditingCohort] = useState<Cohort | null>(null);
+  const [editingCohort, setEditingCohort] = useState<boolean>(false);
+  const [selectedCohort, setSelectedCohort] = useState<Cohort | null>(null);
   const queryClient = useQueryClient();
-
+  const navigate = useNavigate();
   // Fetch cohorts from API
 
   const {
@@ -71,65 +59,27 @@ export const Cohorts: React.FC = () => {
   }
 
   if (isError) {
-    return <ErrorComponent error={error.message} refetch={refetch} />;
+    // return <ErrorComponent error={error.message} refetch={refetch} />;
   }
 
-  //   {
-  //     id: "1",
-  //     name: "Frontend Development Cohort 2025",
-  //     description:
-  //       "Comprehensive React and modern frontend development program",
-  //     start_date: "2025-02-01",
-  //     end_date: "2025-06-01",
-  //     max_interns: 25,
-  //     current_interns: 18,
-  //     is_accepting: true,
-  //     created_at: "2025-01-15",
-  //   },
-  //   {
-  //     id: "2",
-  //     name: "Backend Development Cohort 2025",
-  //     description: "Node.js, Python, and database management focus",
-  //     start_date: "2025-03-01",
-  //     end_date: "2025-07-01",
-  //     max_interns: 20,
-  //     current_interns: 12,
-  //     is_accepting: true,
-  //     created_at: "2025-01-10",
-  //   },
-  //   {
-  //     id: "3",
-  //     name: "UI/UX Design Cohort 2024",
-  //     description: "Design thinking, prototyping, and user experience",
-  //     start_date: "2024-10-01",
-  //     end_date: "2025-02-01",
-  //     max_interns: 15,
-  //     current_interns: 15,
-  //     is_accepting: false,
-  //     created_at: "2024-09-15",
-  //   },
-  // ]);
-
-  // // Toggle accepting via API
-  const toggleAccepting = async (cohortId: string) => {
+  const toggleAccepting = async (cohort: Cohort) => {
     try {
-      const target = cohorts.find((c: { id: string }) => c.id === cohortId);
+      const target = cohorts.find((c: { id: string }) => c.id === cohort.id);
       if (!target) return;
 
-      await adminService.toggleAccepting(cohortId, !target.is_accepting);
+      await adminService.toggleAccepting(cohort, !target.is_accepting);
       toast.success("Cohort status updated");
     } catch (err) {
       toast.error("Failed to update status");
     }
   };
 
-  // // Delete cohort via API
-  const deleteCohort = async (cohortId: string) => {
+  const deleteCohort = async (cohort: Cohort) => {
     if (!window.confirm("Are you sure you want to delete this cohort?")) return;
 
     try {
-      await adminService.deleteCohort(cohortId);
-      queryClient.invalidateQueries({ queryKey: ["cohorts"] });
+      await adminService.deleteCohort(cohort);
+      await queryClient.invalidateQueries({ queryKey: ["cohorts"] });
       toast.success("Cohort deleted");
     } catch (err) {
       toast.error("Failed to delete cohort");
@@ -140,23 +90,26 @@ export const Cohorts: React.FC = () => {
     <div className="mt-28 space-y-8">
       {/* Header */}
 
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-start md:items-center">
         <div>
           <h1 className="text-lg md:text-3xl font-bold text-gray-900">
             Cohort Management
           </h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-sm md:text-base text-gray-600 mt-2">
             Manage internship cohorts and enrollment
           </p>
         </div>
-        <Button onClick={() => setShowCreateModal(true)}>
-          <Plus className="w-5 h-5 mr-2" />
+        <Button
+          className="text-sm md:text-base"
+          onClick={() => setShowCreateModal(true)}
+        >
+          <Plus className="w-4 h-4 mr-1" />
           Create Cohort
         </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-5 gap-6">
         <Card>
           <div className="flex items-center justify-between">
             <div>
@@ -190,7 +143,7 @@ export const Cohorts: React.FC = () => {
                 {cohorts?.reduce(
                   (sum: any, c: { current_interns: any }) =>
                     sum + c.current_interns,
-                  0
+                  0,
                 ) || 0}
               </p>
             </div>
@@ -204,7 +157,7 @@ export const Cohorts: React.FC = () => {
               <p className="text-2xl font-bold text-gray-900">
                 {cohorts.reduce(
                   (sum: number, c: { max_slot: number }) => sum + c.max_slot,
-                  0
+                  0,
                 )}
               </p>
             </div>
@@ -218,7 +171,7 @@ export const Cohorts: React.FC = () => {
               <p className="text-2xl font-bold text-gray-900">
                 {cohorts?.reduce(
                   (sum: number, c: { max_slot: number }) => sum + c.max_slot,
-                  0
+                  0,
                 )}
               </p>
             </div>
@@ -249,7 +202,7 @@ export const Cohorts: React.FC = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <button
-                      onClick={() => toggleAccepting(cohort.id)}
+                      onClick={() => toggleAccepting(cohort)}
                       className={`p-2 rounded-lg transition-colors ${
                         cohort.is_accepting
                           ? "text-green-600 hover:bg-green-50"
@@ -262,11 +215,18 @@ export const Cohorts: React.FC = () => {
                         <ToggleLeft className="w-6 h-6" />
                       )}
                     </button>
-                    <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                    <button
+                      onClick={() => {
+                        setEditingCohort(true);
+                        setSelectedCohort(cohort);
+                        setShowCreateModal(true);
+                      }}
+                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                    >
                       <Edit className="w-5 h-5" />
                     </button>
                     <button
-                      onClick={() => deleteCohort(cohort.id)}
+                      onClick={() => deleteCohort(cohort)}
                       className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
                     >
                       <Trash2 className="w-5 h-5" />
@@ -296,16 +256,14 @@ export const Cohorts: React.FC = () => {
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Enrollment Progress</span>
                     <span className="font-medium">
-                      {cohort.current_interns}/{cohort.max_slot} interns
+                      {10}/{cohort.max_slot} interns
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
                       className="bg-gradient-to-r from-[#0f266c] to-[#007bff] h-2 rounded-full transition-all duration-300"
                       style={{
-                        width: `${
-                          (cohort.current_interns / cohort.max_slot) * 100
-                        }%`,
+                        width: `${(10 / cohort.max_slot) * 100}%`,
                       }}
                     />
                   </div>
@@ -318,14 +276,20 @@ export const Cohorts: React.FC = () => {
                         cohort.is_accepting ? "bg-green-500" : "bg-gray-400"
                       }`}
                     />
-                    <span className="text-sm text-gray-600">
-                      {cohort.is_accepting
-                        ? "Accepting Applications"
-                        : "Closed"}
+                    <span className="text-xs d:text-sm text-gray-600">
+                      {cohort.is_accepting ? "Accepting" : "Closed"}
                     </span>
                   </div>
-                  <Button variant="outline" size="sm">
-                    View Details
+                  <Button
+                    onClick={() =>
+                      navigate(`/admin/cohort/${cohort.id}/courses`)
+                    }
+                    className="flex items-center text-sm md:text-base"
+                    variant="outline"
+                    size="sm"
+                  >
+                    Manage Courses
+                    <ChevronRight />
                   </Button>
                 </div>
               </div>
@@ -339,6 +303,10 @@ export const Cohorts: React.FC = () => {
         <CreateCohortModal
           setShowCreateModal={setShowCreateModal}
           showCreateModal={showCreateModal}
+          setEditingCohort={setEditingCohort}
+          editingCohort={editingCohort}
+          selectedCohort={selectedCohort}
+          setSelectedCohort={setSelectedCohort}
         />
       )}
     </div>

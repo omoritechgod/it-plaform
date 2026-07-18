@@ -20,13 +20,13 @@ import { Candidate } from "../../types";
 import ErrorComponent from "../../components/ErrorComponent";
 import InternProgressCard from "../../components/CandidateCard";
 
+type Active = "all" | "active" | "rejected" | "pending";
 export const Candidates: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStage, setSelectedStage] = useState("all");
-  const [selectedCandidates, setSelectedCandidates] = useState<string[]>([]);
+  const [selectedCandidates, _setSelectedCandidates] = useState<string[]>([]);
   const [showBulkEmailModal, setShowBulkEmailModal] = useState(false);
-
-  // Mock data
+  const [filterByActive, setFilterByActive] = useState<Active>("all");
 
   const {
     data: candidates,
@@ -68,41 +68,31 @@ export const Candidates: React.FC = () => {
     { value: "training", label: "Training" },
   ];
 
+  const status = [
+    { value: "all", label: "All Status" },
+    { value: "active", label: "Active" },
+    { value: "rejected", label: "Rejected" },
+    { value: "pending", label: "Pending" },
+  ];
+
   const filteredCandidates = candidates?.filter((candidate: Candidate) => {
     const matchesSearch =
       candidate?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       candidate?.email.toLowerCase().includes(searchTerm.toLowerCase());
-    // const matchesStage =
-    //   selectedStage === "all" || candidate.stage === selectedStage;
-    return matchesSearch;
+    const matchesStatus =
+      filterByActive === "all" || candidate.status === filterByActive;
+    return matchesSearch && matchesStatus;
   });
 
-  const handleSelectCandidate = (candidateId: string) => {
-    setSelectedCandidates((prev) =>
-      prev.includes(candidateId)
-        ? prev.filter((id) => id !== candidateId)
-        : [...prev, candidateId]
-    );
-  };
-
-  const handleSelectAll = () => {
-    if (selectedCandidates.length === filteredCandidates?.length) {
-      setSelectedCandidates([]);
-    } else {
-      setSelectedCandidates(
-        filteredCandidates?.map((c: Candidate) => String(c.id)) ?? []
-      );
-    }
-  };
-
-  const approveCandidate = (candidateId: string) => {};
-
-  const rejectCandidate = (candidateId: string) => {
-    if (window.confirm("Are you sure you want to reject this candidate?")) {
-    }
-  };
-
-
+  // const handleSelectAll = () => {
+  //   if (selectedCandidates.length === filteredCandidates?.length) {
+  //     setSelectedCandidates([]);
+  //   } else {
+  //     setSelectedCandidates(
+  //       filteredCandidates?.map((c: Candidate) => String(c.id)) ?? []
+  //     );
+  //   }
+  // };
 
   // const getStatusColor = (status: string) => {
   //   switch (status) {
@@ -234,7 +224,7 @@ export const Candidates: React.FC = () => {
             <div>
               <p className="text-sm text-gray-600">Approved</p>
               <p className="text-2xl font-bold text-gray-900">
-                {candidates?.filter((c) => c.status === "approved").length}
+                {candidates?.filter((c) => c.status === "active").length}
               </p>
             </div>
             <CheckCircle className="w-8 h-8 text-green-600" />
@@ -280,6 +270,19 @@ export const Candidates: React.FC = () => {
                 </option>
               ))}
             </select>
+
+            <select
+              value={filterByActive}
+              onChange={(e) => setFilterByActive(e.target.value as Active)}
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              {status.map((stage) => (
+                <option key={stage.value} value={stage.value}>
+                  {stage.label}
+                </option>
+              ))}
+            </select>
+
             <Button variant="outline">
               <Filter className="w-4 h-4 mr-2" />
               More Filters
@@ -327,7 +330,11 @@ export const Candidates: React.FC = () => {
             </thead>
             <tbody>
               {filteredCandidates?.map((data, index) => (
-                <InternProgressCard data={data} index={index} />
+                <InternProgressCard
+                  refetch={refetch}
+                  data={data}
+                  index={index}
+                />
               ))}
             </tbody>
           </table>

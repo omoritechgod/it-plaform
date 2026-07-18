@@ -14,11 +14,7 @@ const applicationSchema = z
     phone: z.string().nonempty("number is required"),
     password: z
       .string()
-      .min(8, "Password must be at least 8 characters")
-      .regex(
-        /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number"
-      ),
+      .min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {

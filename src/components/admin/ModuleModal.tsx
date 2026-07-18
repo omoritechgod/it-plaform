@@ -60,21 +60,6 @@ const EditModuleModal = ({
 
   const queryClient = useQueryClient();
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (data: TrainingModule) => {
-      const res = await adminService.updateTrainingModule(data);
-      return res;
-    },
-
-    onSuccess: (data) => {
-      toast.success(data.message || "updated training module eas successfull")
-      onClose();
-      queryClient.invalidateQueries({ queryKey: ["module"] });
-    },
-    onError: (error) => {
-      toast.error(error?.message || "Failed to Update module");
-    },
-  });
 
   const onSubmit = (data: trainingModuleData) => {
     mutate(data);

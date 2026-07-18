@@ -13,11 +13,15 @@ import QuestionsManagement from "../../components/admin/module-sub/QuestionsMana
 import CreateTestTemplate from "../../components/admin/module-sub/CreateTestTemplate";
 
 const SubModule = () => {
-  const { moduleSlug } = useParams();
+  const { cohortId, moduleSlug } = useParams();
   const [count, setCount] = useState<number>(1);
   const [edit, setEdit] = useState<boolean>(false);
 
   if (!moduleSlug) {
+    return;
+  }
+
+   if (!cohortId) {
     return;
   }
 

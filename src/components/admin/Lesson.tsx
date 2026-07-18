@@ -81,7 +81,7 @@ const LessonForm = ({
 
   const { mutate: updateLesson, isPending: pending } = useMutation({
     mutationFn: (data: LessonFormData) => {
-      return adminService.updateLessonModule(data, lesson.id);
+      return adminService.updateLessonModule(data);
     },
 
     onSuccess: async () => {
@@ -247,8 +247,8 @@ const LessonModal = ({
 
   const { mutate } = useMutation({
     mutationKey: ["deleteLesson"],
-    mutationFn: async (id: string | number) => {
-      const res = await adminService.deleteLesson(id);
+    mutationFn: async (m: Lesson) => {
+      const res = await adminService.deleteLesson(m);
       return res.data;
     },
     onSuccess: async () => {
@@ -258,7 +258,7 @@ const LessonModal = ({
     },
   });
 
-  const onDelete = (id: string | number) => {
+  const onDelete = (m: Lesson) => {
     if (
       !window.confirm(
         "Are you sure you want to delete this candidate? This action cannot be undone."
@@ -267,7 +267,7 @@ const LessonModal = ({
       return;
     }
 
-    mutate(id);
+    mutate(m);
   };
 
   return (
@@ -351,7 +351,7 @@ const LessonModal = ({
                     <Pencil size={14} />
                   </button>
                   <button
-                    onClick={() => onDelete(lesson.id)}
+                    onClick={() => onDelete(lesson)}
                     className="p-1.5 rounded-full hover:bg-red-50 text-gray-400 hover:text-red-600"
                   >
                     <Trash2 size={14} />

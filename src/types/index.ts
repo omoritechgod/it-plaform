@@ -39,7 +39,7 @@ export interface Candidate {
   resumeUrl?: string | null;
 
   skills: string;
-  status: "pending" | "approved" | "rejected";
+  status: "pending" | "active" | "rejected";
 
   emailVerifiedAt?: string | null;
   createdAt: string;
@@ -51,19 +51,45 @@ export interface Admin extends User {
 }
 
 export interface Cohort {
-  id: string;
+  id?: string | number;
   name: string;
   description: string;
   start_date: string;
-  end_date: string;
   is_accepting: boolean;
+  settings: {
+    duration: string;
+    level: string;
+  };
+  current_interns?: number;
+  max_slot: number;
   max_interns: number;
-  current_interns: number;
-  created_at: string;
+  created_at?: string;
+}
+
+export interface TestData {
+  title: string;
+  skill: string;
+  level: "beginner" | "intermediate" | "advanced";
+  time_limit: number;
+  max_attempts: number;
+  passing_score: number;
+  questions: any[];
+}
+
+export interface ProjectData {
+  title: string;
+  description: string;
+  requirements: string[];
+  skills_required: string[];
+  stage_required: string;
+  max_interns: number;
+  deadline: string;
+  stipend_amount?: number;
 }
 
 export interface TrainingModule {
-  id: string | number;
+  courseId: number;
+  id?: string | number;
   title: string;
   slug: string;
   description: string;

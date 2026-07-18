@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Input } from "../common/Input";
 import { Button } from "../common/Button";
@@ -8,10 +8,15 @@ import { useForm } from "react-hook-form";
 import adminService from "../../services/admin.service";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import { Cohort } from "../../types";
 
 interface CreateCohortModalProps {
   setShowCreateModal: (show: boolean) => void;
   showCreateModal?: boolean;
+  setEditingCohort: React.Dispatch<React.SetStateAction<boolean>>;
+  editingCohort: boolean;
+  selectedCohort: Cohort | null;
+  setSelectedCohort: React.Dispatch<React.SetStateAction<Cohort | null>>;
 }
 
 const cohortSchema = z.object({
@@ -28,11 +33,15 @@ const cohortSchema = z.object({
   }),
 });
 
-type cohortData = z.infer<typeof cohortSchema>;
+export type cohortData = z.infer<typeof cohortSchema>;
 
 const CreateCohortModal = ({
   setShowCreateModal,
   showCreateModal,
+  setEditingCohort,
+  editingCohort,
+  selectedCohort,
+  setSelectedCohort,
 }: CreateCohortModalProps) => {
   const {
     register,
@@ -44,31 +53,7 @@ const CreateCohortModal = ({
   });
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
-    mutationFn: async (data: cohortData) => {
-      const res = await adminService.createCohort(data);
-      return res;
-    },
-  });
-
-  const onSubmit = (data: cohortData) => {
-    console.log("Cohort Data:", data);
-    mutation.mutate(data, {
-      onSuccess: () => {
-        toast.success("Cohort created successfully");
-
-        queryClient.invalidateQueries({ queryKey: ["cohorts"] });
-
-        setShowCreateModal(false);
-      },
-      onError: (error) => {
-        toast.error(error?.message || "Failed to create cohort");
-      },
-    });
-    reset();
-  };
-
-  React.useEffect(() => {
+  useEffect(() => {
     if (showCreateModal) {
       document.body.style.overflow = "hidden";
     }
@@ -78,6 +63,55 @@ const CreateCohortModal = ({
     };
   }, [showCreateModal]);
 
+  useEffect(() => {
+    if (editingCohort) {
+      reset({
+        name: selectedCohort?.name,
+        description: selectedCohort?.description,
+        is_accepting: selectedCohort?.is_accepting,
+        max_slot: selectedCohort?.max_slot,
+        settings: {
+          level: selectedCohort?.settings?.level,
+          duration: selectedCohort?.settings?.duration,
+        },
+
+        start_date: selectedCohort?.start_date,
+      });
+    }
+  }, [editingCohort]);
+
+  const mutation = useMutation({
+    mutationFn: async (data: cohortData) => {
+      const res = await adminService.createCohort(data);
+      return res;
+    },
+    onSuccess: () => {
+      toast.success("Cohort created successfully");
+      reset();
+
+      queryClient.invalidateQueries({ queryKey: ["cohorts"] });
+
+      setShowCreateModal(false);
+    },
+    onError: (error) => {
+      toast.error(error?.message || "Failed to create cohort");
+    },
+  });
+
+  const onSubmit = (data: cohortData) => {
+    console.log("Cohort Data:", data);
+    if (editingCohort) {
+      setEditingCohort(false);
+      setShowCreateModal(false);
+      setSelectedCohort(null);
+      return toast.success(
+        "updated successful not set to dataBas sha..end ponit not existing yet",
+      );
+    } else {
+      return mutation.mutate(data);
+    }
+  };
+
   return (
     <div className="fixed w-full h-full bg-black bg-opacity-50 left-0 bottom-0 flex items-center justify-center z-50">
       <motion.div
@@ -86,7 +120,7 @@ const CreateCohortModal = ({
         className="bg-white rounded-xl p-6 w-full max-w-md mx-4"
       >
         <h3 className="text-xl font-bold text-gray-900 mb-4">
-          Create New Cohort
+          {editingCohort ? "Edit" : " Create"} New Cohort
         </h3>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Input
@@ -178,12 +212,16 @@ const CreateCohortModal = ({
 
           <div className="flex space-x-3 pt-4">
             <Button type="submit" className="flex-1">
-              Create Cohort
+              {editingCohort ? "Edit Cohort" : "Create Cohort"}
             </Button>
             <Button
               type="button"
               variant="outline"
-              onClick={() => setShowCreateModal(false)}
+              onClick={() => {
+                setShowCreateModal(false);
+                setEditingCohort(false);
+                setSelectedCohort(null);
+              }}
             >
               Cancel
             </Button>

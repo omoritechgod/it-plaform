@@ -34,21 +34,6 @@ export const Apply: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      // PASSWORD VALIDATION
-      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-
-      if (!passwordRegex.test(password)) {
-        toast.error(
-          "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and be at least 8 characters long."
-        );
-        return; // Stop submission if invalid
-      }
-
-      if (password !== confirmPassword) {
-        toast.error("Passwords do not match");
-        return;
-      }
-
       setIsLoading(true);
 
       const data = {

@@ -1,13 +1,18 @@
 import { Calendar, Wallet, Check, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { Candidate } from "../types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import adminService from "../services/admin.service";
+import { toast } from "react-toastify";
 
 export default function InternProgressCard({
   data,
   index,
+  refetch,
 }: {
   data: Candidate;
   index: number;
+  refetch: () => void;
 }) {
   const normalizeSkills = (skills: string | string[] | null): string[] => {
     if (!skills) return [];
@@ -20,13 +25,48 @@ export default function InternProgressCard({
     }
   };
 
-  // 🔁 handlers (plug into mutation later)
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending: pending } = useMutation({
+    mutationFn: async () => {
+      return await adminService.approveCandidate(data.id);
+    },
+    onSuccess: async () => {
+      refetch();
+      await queryClient.invalidateQueries({ queryKey: ["candidates"] });
+      toast.success("Cabdidate approved successfully");
+    },
+    onError: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["candidates"] });
+
+      toast.error("something went wrong while approving candidate");
+    },
+  });
+
+  const { mutate: rejectCandidate, isPending } = useMutation({
+    mutationFn: async () => {
+      return await adminService.rejectCandidate(data.id);
+    },
+    onSuccess: async () => {
+      refetch();
+      await queryClient.invalidateQueries({ queryKey: ["candidates"] });
+      toast.success("Candidate rejected successfully");
+    },
+    onError: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["candidates"] });
+
+      toast.error("something went wrong while rejecting candidate");
+    },
+  });
+
   const handleApprove = () => {
     console.log("Approve user", data.id);
+    mutate();
   };
 
   const handleReject = () => {
     console.log("Reject user", data.id);
+    rejectCandidate();
   };
 
   return (
@@ -62,8 +102,7 @@ export default function InternProgressCard({
                 className="
               rounded-full px-2.5 py-1
               text-[11px] font-medium
-              bg-blue-100 text-blue/70
-              ring-1 ring-blue/10
+             text-blue/70
             "
               >
                 {skill}
@@ -83,7 +122,7 @@ export default function InternProgressCard({
           <span
             className={`px-3 py-1 rounded-full text-xs font-semibold capitalize
           ${
-            data.status === "approved"
+            data.status === "active"
               ? "bg-emerald-100 text-emerald-700 ring-1 ring-emerald-600/20"
               : data.status === "pending"
               ? "bg-yellow-100 text-yellow-700 ring-1 ring-yellow-600/20"
@@ -98,6 +137,7 @@ export default function InternProgressCard({
           {data.status === "pending" && (
             <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition">
               <button
+                disabled={pending}
                 onClick={handleApprove}
                 className="
               p-1.5 rounded-full
@@ -111,6 +151,7 @@ export default function InternProgressCard({
               </button>
 
               <button
+                disabled={isPending}
                 onClick={handleReject}
                 className="
               p-1.5 rounded-full

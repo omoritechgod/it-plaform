@@ -1,53 +1,23 @@
 import api from "./api";
 import {
   ApiResponse,
-  Cohort,
   User,
   SkillTest,
   Project,
   WithdrawalRequest,
-  Transaction,
+  Transaction, 
   TrainingModule,
-  Intern,
   Lesson,
   Candidate,
   SkillQuestion,
   Test,
+  Cohort,
+  TestData,
+  ProjectData,
 } from "../types";
 import { trainingModuleData } from "../pages/admin/TrainingModule";
+import { cohortData } from "../components/admin/CreateCohortModal";
 
-export interface CohortData {
-  name: string;
-  description: string;
-  start_date: string;
-  max_slot: number;
-  is_accepting: boolean;
-  settings: {
-    duration: string;
-    level: string;
-  };
-}
-
-export interface TestData {
-  title: string;
-  skill: string;
-  level: "beginner" | "intermediate" | "advanced";
-  time_limit: number;
-  max_attempts: number;
-  passing_score: number;
-  questions: any[];
-}
-
-export interface ProjectData {
-  title: string;
-  description: string;
-  requirements: string[];
-  skills_required: string[];
-  stage_required: string;
-  max_interns: number;
-  deadline: string;
-  stipend_amount?: number;
-}
 
 class AdminService {
   // Cohort Management
@@ -60,23 +30,23 @@ class AdminService {
     });
   }
 
-  async createCohort(data: CohortData): Promise<ApiResponse<Cohort>> {
+  async createCohort(data: cohortData): Promise<ApiResponse<Cohort>> {
     return api.post("/api/cohorts", data);
   }
 
   async updateCohort(
     id: string,
-    data: Partial<CohortData>
+    data: Partial<Cohort>
   ): Promise<ApiResponse<Cohort>> {
     return api.put(`/api/cohorts/${id}`, data);
   }
 
-  async deleteCohort(id: string): Promise<ApiResponse> {
-    return api.delete(`/api/cohorts/${id}`);
+  async deleteCohort(m:Cohort): Promise<ApiResponse> {
+    return api.delete(`/api/cohorts/${m.id}`);
   }
 
-  async toggleAccepting(id: string, accepting: boolean): Promise<ApiResponse> {
-    return api.patch(`/api/cohorts/${id}/toggle-accepting`, {
+  async toggleAccepting(m: Cohort, accepting: boolean): Promise<ApiResponse> {
+    return api.patch(`/api/cohorts/${m.id}/toggle-accepting`, {
       is_accepting: accepting,
     });
   }
@@ -86,12 +56,16 @@ class AdminService {
     return api.get("/api/all-interns");
   }
 
-  async approveCandidate(id: string): Promise<ApiResponse> {
-    return api.post(`/admin/candidates/${id}/approve`);
+  async approveCandidate(id: string | number): Promise<ApiResponse> {
+    return api.post(`/api/intern/review/${id}`, {
+      status: "active"
+    });
   }
 
-  async rejectCandidate(id: string): Promise<ApiResponse> {
-    return api.post(`/admin/candidates/${id}/reject`);
+  async rejectCandidate(id: string | number): Promise<ApiResponse> {
+    return api.post(`/api/intern/review/${id}`, {
+      status: "rejected"
+    });
   }
 
   async deleteCandidate(id: string): Promise<ApiResponse> {
@@ -166,9 +140,8 @@ class AdminService {
 
   async updateLessonModule(
     data: Lesson,
-    id: number | string
   ): Promise<ApiResponse<TrainingModule>> {
-    return api.put(`/api/lessons/${id}`, data);
+    return api.put(`/api/lessons/${data.id}`, data);
   }
 
   async getLessonModule(): Promise<ApiResponse<Lesson[]>> {
@@ -182,8 +155,8 @@ class AdminService {
     return api.post(`/api/module/${moduleId}/lessons`, data);
   }
 
-  async deleteLesson(id: string | number): Promise<ApiResponse<Lesson[]>> {
-    return api.delete(`/api/lessons/${id}`);
+  async deleteLesson(m: Lesson): Promise<ApiResponse<Lesson[]>> {
+    return api.delete(`/api/lessons/${m.id}`);
   }
 
   // question management

@@ -6,9 +6,9 @@ import {
   Award,
   DollarSign,
   Users,
-  Briefcase,
-  BarChart2,
-  Wallet,
+  // Briefcase,
+  // BarChart2,
+  // Wallet,
   Star,
   Quote,
 } from "lucide-react";
@@ -23,39 +23,39 @@ import BtnTransparent from "../../components/ui/BtnTransparent";
 import Title from "../../components/ui/Title";
 import CTA from "../../components/common/CTA";
 
-type FeatureItem = {
-  id: string;
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-};
+// type FeatureItem = {
+//   id: string;
+//   title: string;
+//   description: string;
+//   icon: React.ReactNode;
+// };
 
-const organisation: FeatureItem[] = [
-  {
-    id: "manage-cohorts",
-    title: "Manage cohorts",
-    description: "Manage cohorts, candidates, and tests easily.",
-    icon: <Users className="w-10 h-10" />,
-  },
-  {
-    id: "post-projects",
-    title: "Post projects",
-    description: "Post company projects and assign by skill.",
-    icon: <Briefcase className="w-10 h-10" />,
-  },
-  {
-    id: "monitor-progress",
-    title: "Track & report",
-    description: "Monitor intern progress and generate reports.",
-    icon: <BarChart2 className="w-10 h-10" />,
-  },
-  {
-    id: "fund-stipends",
-    title: "Payments & wallet",
-    description: "Fund stipends securely through the admin wallet.",
-    icon: <Wallet className="w-10 h-10" />,
-  },
-];
+// const organisation: FeatureItem[] = [
+//   {
+//     id: "manage-cohorts",
+//     title: "Manage cohorts",
+//     description: "Manage cohorts, candidates, and tests easily.",
+//     icon: <Users className="w-10 h-10" />,
+//   },
+//   {
+//     id: "post-projects",
+//     title: "Post projects",
+//     description: "Post company projects and assign by skill.",
+//     icon: <Briefcase className="w-10 h-10" />,
+//   },
+//   {
+//     id: "monitor-progress",
+//     title: "Track & report",
+//     description: "Monitor intern progress and generate reports.",
+//     icon: <BarChart2 className="w-10 h-10" />,
+//   },
+//   {
+//     id: "fund-stipends",
+//     title: "Payments & wallet",
+//     description: "Fund stipends securely through the admin wallet.",
+//     icon: <Wallet className="w-10 h-10" />,
+//   },
+// ];
 
 export const Home: React.FC = () => {
   const features = [
@@ -383,7 +383,6 @@ export const Home: React.FC = () => {
                 <p className="relative z-10 text-gray-600 leading-relaxed">
                   {item.description}
                 </p>
-                <span className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-blue/50 to-indigo-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-b-3xl"></span>
               </Card>
             </motion.div>
           ))}
@@ -391,7 +390,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* for organization */}
-      <section className="relative w-[95%] max-w-6xl mx-auto py-28">
+      {/* <section className="relative w-[95%] max-w-6xl mx-auto py-28">
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
         <div className="max-w-2xl mb-16">
           <Title
@@ -410,7 +409,6 @@ export const Home: React.FC = () => {
               />
             </div>
           </div>
-          {/* Features */}
           <div className="grid sm:grid-cols-2 gap-8">
             {organisation.map((item, _index) => (
               <Card
@@ -431,7 +429,7 @@ export const Home: React.FC = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* testimonials */}
       <section className="my-12">

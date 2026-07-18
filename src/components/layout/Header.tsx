@@ -55,7 +55,6 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
           { label: "Dashboard", href: ROUTES.ADMIN_DASHBOARD },
           { label: "Cohorts", href: ROUTES.ADMIN_COHORTS },
           { label: "Candidates", href: ROUTES.ADMIN_CANDIDATES },
-          { label: "Module", href: ROUTES.ADMIN_MODULE },
           { label: "Projects", href: ROUTES.ADMIN_PROJECTS },
           { label: "Wallets", href: ROUTES.ADMIN_WALLETS },
           { label: "Reports", href: ROUTES.ADMIN_REPORTS },
@@ -91,11 +90,6 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
           label: "Cohorts",
           href: "/admin/cohorts",
           icon: Users,
-        },
-        {
-          label: "Modules",
-          href: "/admin/module",
-          icon: BookOpen,
         },
         {
           label: "Tests",
@@ -145,7 +139,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
   return (
     <header
       className={`w-full ${
-        bg ? "bg-white top-0" : "bg-transparent top-2"
+        bg ? "bg-white top-0" : isMenuOpen ? "bg-white" :  "bg-transparent top-2"
       } shadow-sm fixed left-0 py-4 z-50`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -295,12 +289,12 @@ export const Header: React.FC<HeaderProps> = ({ variant = "public" }) => {
         </div>
 
         {/* Mobile Menu */}
-        {isMenuOpen && (
+        { (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden w-full backdrop-blur-md shadow-2xl bg-white border-t border-gray-200 p-4"
+            className={`md:hidden w-full  fixed shadow-2xl bg-white/90 left-0 backdrop-blur border-t border-gray-200 p-4 ${isMenuOpen ? "top-[15%]" : "-top-full"} transition-all duration-500`}
           >
             <div className="flex flex-col space-y-3">
               {navItems.map((item) => (

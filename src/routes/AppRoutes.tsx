@@ -25,6 +25,7 @@ import Jobs from "../pages/public/Jobs";
 import { useAuthStore } from "../stores/useAuthStore";
 import TrainingModulePage from "../pages/admin/TrainingModule";
 import SubModule from "../pages/admin/SubModule";
+import Courses from "../pages/admin/Courses";
 
 const ProtectedRoute: React.FC<{
   children: React.ReactNode;
@@ -86,14 +87,11 @@ export const AppRoutes: React.FC = () => {
           />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="cohorts" element={<Cohorts />} />
-          {/* <Route path="create-test-template" element={<CreateTestTemplate />} />
-          <Route
-            path="questions-management"
-            element={<QuestionsManagement />}
-          /> */}
-          <Route path="candidates" element={<Candidates />} />
-          <Route path="module" element={<TrainingModulePage />} />
+          <Route path="cohort/:cohortId/courses" element={<Courses />} />
+          <Route path="courses/:courseId/modules" element={<TrainingModulePage />} />
           <Route path="module/:moduleSlug" element={<SubModule />} />
+
+          <Route path="candidates" element={<Candidates />} />
           <Route
             path="projects"
             element={<div>Projects Management Coming Soon</div>}
